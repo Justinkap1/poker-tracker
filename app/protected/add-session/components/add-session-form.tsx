@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
 import { addSessionFormSchema, addSessionForm } from '@/lib/types';
+import AddDetailForm from "../components/add-detail-form"
 
 interface formProps {
     userId: string;
@@ -126,19 +127,18 @@ const FormResponse: React.FC<formProps> = ({ userId, locations, stakes, game_typ
 
     return (
         <form
-            className="flex flex-col min-w-100 max-w-100 border-black border-2 rounded-md p-8 bg-[#F6F6F6]"
+            className="flex flex-col min-w-[500px] max-w-[500px] border-black border-2 rounded-md p-8 bg-[#F6F6F6]"
             onSubmit={handleSubmit}
         >
-            <h1 className="text-2xl font-medium">Add A Session</h1>
             {formItems.map((item, index) => (
-                <div className="flex flex-row gap-2 mt-8" key={index}>
+                <div className="flex flex-row gap-2 mt-2" key={index}>
                     <Label
                         htmlFor={item.name}
                         className="flex items-center text-md min-w-40 max-w-40">
                         {item.label}
                     </Label>
                     <div className="flex flex-col">
-                        <div className="flex flex-col border border-black rounded-md">
+                        <div className="flex flex-col rounded-md">
                             {item.name === 'start_time' || item.name === 'end_time' ? (
                                 <input
                                     type="datetime-local"
@@ -146,20 +146,29 @@ const FormResponse: React.FC<formProps> = ({ userId, locations, stakes, game_typ
                                     value={formData[item.name]}
                                     onChange={handleChange}
                                     placeholder={item.placeholder}
-                                    className="rounded-md px-3 py-2"
+                                    className="border border-black rounded-md px-3 py-2"
                                     required
                                 />
                             ) : item.options ? (
-                                <select name={item.name}
-                                    value={formData[item.name]}
-                                    onChange={handleChange}
-                                    required
-                                    className="rounded-md px-3 py-2">
-                                    <option value="" disabled hidden>{item.placeholder}</option>
-                                    {item.options.map((option, index) => (
-                                        <option value={option} key={index}>{option}</option>
-                                    ))}
-                                </select>
+                                <div className="flex flex-row gap-4 justify-center items-center">
+                                    <select name={item.name}
+                                        value={formData[item.name]}
+                                        onChange={handleChange}
+                                        required
+                                        className="border border-black rounded-md px-3 py-2">
+                                        <option value="" disabled hidden>{item.placeholder}</option>
+                                        {item.options.map((option, index) => (
+                                            <option value={option} key={index}>{option}</option>
+                                        ))}
+                                    </select>
+                                    <AddDetailForm 
+                                        detail={item.label} 
+                                        locations={locations.map((loc) => loc.location)} 
+                                        stakes={stakes.map((stk) => stk.stake)}
+                                        game_types={game_types.map((type) => type.game_type)}
+                                        user_id={userId}
+                                    />
+                                </div>
                             ) : (
                                 <input
                                     type="text"
@@ -167,7 +176,7 @@ const FormResponse: React.FC<formProps> = ({ userId, locations, stakes, game_typ
                                     value={formData[item.name]}
                                     onChange={handleChange}
                                     placeholder={item.placeholder}
-                                    className="rounded-md px-3 py-2"
+                                    className="border border-black rounded-md px-3 py-2"
                                     required
                                 />
                             )}
