@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { CirclePlus, ChartBarIncreasing, NotebookPen, CircleUserRound, LogOut } from "lucide-react"
+import { CirclePlus, ChartBarIncreasing, Pencil, CircleUserRound, LogOut } from "lucide-react"
 import { signOutAction } from "@/app/actions"
 
 export default function Sidebar() {
@@ -16,7 +16,7 @@ export default function Sidebar() {
             <ul className="flex flex-col justify-center items-center gap-4">
                 <a href="/protected"><ChartBarIncreasing width={40} height={40} /></a>
                 <a href="/protected/add-session"><CirclePlus width={40} height={40} /></a>
-                <a href="/protected/notes"><NotebookPen width={40} height={40} /></a>
+                <a href="/protected/notes"><Pencil width={40} height={40} /></a>
             </ul>
             <ul className="flex flex-col justify-center items-center gap-2">
                 <a href="/protected/profile"><CircleUserRound width={40} height={40} /></a>
