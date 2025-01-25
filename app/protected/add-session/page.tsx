@@ -1,5 +1,4 @@
 import FormResponse from "@/components/shared/add-session-form";
-import { Message } from "@/components/shared/form-message";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
