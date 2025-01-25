@@ -1,63 +1,34 @@
 'use client'
 
-import { z } from 'zod';
 import { useState } from 'react';
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
+import { addSessionFormSchema, addSessionForm } from '@/lib/types';
 
 interface formProps {
     userId: string;
+    locations: Array<{ location: string }>;
+    stakes: Array<{ stake: string }>;
+    game_types: Array<{ game_type: string }>;
 }
 
-const addSessionFormSchema = z.object({
-    game_type: z.string().min(1, "Please select a valid game type"),
-    stake: z.string().min(1, "Please select a valid stake for your game"),
-    location: z.string().min(1, "Please select a valid location for your game"),
-    buyin: z
-        .number({
-            invalid_type_error: "must be a number 0 or above",
-        })
-        .min(0, "must be a number 0 or above")
-        .refine((val) => !isNaN(val), "must be a number 0 or above"),
-    cashout: z
-        .number({
-            invalid_type_error: "must be a number 0 or above",
-        })
-        .min(0, "must be a number 0 or above")
-        .refine((val) => !isNaN(val), "must be a number 0 or above"),
-    start_time: z
-        .string()
-        .refine(
-            (val) => !isNaN(Date.parse(val)),
-            "Invalid datetime string."
-        ),
-    end_time: z
-        .string()
-        .refine(
-            (val) => !isNaN(Date.parse(val)),
-            "Invalid datetime string."
-        ),
-});
-
-type addSessionForm = z.infer<typeof addSessionFormSchema>;
-
-const formItems: Array<{
-    name: keyof addSessionForm;
-    label: string;
-    placeholder: string;
-    required: boolean;
-    options?: string[];
-}> = [
-        { name: "game_type", label: "Game Type", placeholder: "Select game type", required: true, options: ["No-Limit Texas Hold'em", "Pot-Limit Omaha", "7-Card Stud"] },
-        { name: "stake", label: "Stake", placeholder: "Select stake", required: true, options: ["1/2", "2/5", "5/10"] },
-        { name: "location", label: "Location", placeholder: "Select location", required: true, options: ["MGM National Harbor", "Hard Rock Hollywood", "Pulkit's Home Game"] },
-        { name: "buyin", label: "Buy In", placeholder: "Enter buy in", required: true },
-        { name: "cashout", label: "Cash Out", placeholder: "Enter cash out", required: true },
-        { name: "start_time", label: "Start Time", placeholder: "Enter start time", required: true },
-        { name: "end_time", label: "End Time", placeholder: "Enter end time", required: true }
-    ];
-
-const FormResponse: React.FC<formProps> = ({ userId }) => {
+const FormResponse: React.FC<formProps> = ({ userId, locations, stakes, game_types }) => {
+    //console.log(locations, stakes, game_types)
+    const formItems: Array<{
+        name: keyof addSessionForm;
+        label: string;
+        placeholder: string;
+        required: boolean;
+        options?: string[];
+    }> = [
+            { name: "game_type", label: "Game Type", placeholder: "Select game type", required: true, options: game_types.map((type) => type.game_type) },
+            { name: "stake", label: "Stake", placeholder: "Select stake", required: true, options: stakes.map((stk) => stk.stake) },
+            { name: "location", label: "Location", placeholder: "Select location", required: true, options: locations.map((loc) => loc.location) },
+            { name: "buyin", label: "Buy In", placeholder: "Enter buy in", required: true },
+            { name: "cashout", label: "Cash Out", placeholder: "Enter cash out", required: true },
+            { name: "start_time", label: "Start Time", placeholder: "Enter start time", required: true },
+            { name: "end_time", label: "End Time", placeholder: "Enter end time", required: true }
+        ];
     const [submitting, setSubmitting] = useState(false)
     const [formData, setFormData] = useState({
         game_type: "",
@@ -155,7 +126,7 @@ const FormResponse: React.FC<formProps> = ({ userId }) => {
 
     return (
         <form
-            className="flex flex-col min-w-100 max-w-100 border border-black border-2 rounded-md p-8 bg-[#F6F6F6]"
+            className="flex flex-col min-w-100 max-w-100 border-black border-2 rounded-md p-8 bg-[#F6F6F6]"
             onSubmit={handleSubmit}
         >
             <h1 className="text-2xl font-medium">Add A Session</h1>

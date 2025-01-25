@@ -6,15 +6,13 @@ export default function Header() {
     <div className="flex flex-col gap-16 items-center">
       <div className="flex gap-8 justify-center items-center">
         <a
-          href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-          target="_blank"
-          rel="noreferrer"
+          href="/sign-up"
         >
-          <SupabaseLogo />
+          Sign Up
         </a>
         <span className="border-l rotate-45 h-6" />
-        <a href="https://nextjs.org/" target="_blank" rel="noreferrer">
-          <NextLogo />
+        <a href="/sign-in">
+          Sign in
         </a>
       </div>
       <h1 className="sr-only">Supabase and Next.js Starter Template</h1>

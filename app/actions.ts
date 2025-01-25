@@ -4,6 +4,7 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Location, Stakes, GameTypes } from "@/lib/interfaces";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -19,7 +20,7 @@ export const signUpAction = async (formData: FormData) => {
     );
   }
 
-  const { error } = await supabase.auth.signUp({
+  const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -27,16 +28,64 @@ export const signUpAction = async (formData: FormData) => {
     },
   });
 
-  if (error) {
-    console.error(error.code + " " + error.message);
-    return encodedRedirect("error", "/sign-up", error.message);
-  } else {
+  if (signUpError) {
+    console.error(signUpError.code + " " + signUpError.message);
+    return encodedRedirect("error", "/sign-up", signUpError.message);
+  } 
+  
+  const userId = signUpData.user?.id;
+
+  if (!userId) {
     return encodedRedirect(
-      "success",
+      "error",
       "/sign-up",
-      "Thanks for signing up! Please check your email for a verification link.",
+      "Something went wrong. Please try again."
     );
   }
+
+  try {
+    const { error: stakesError } = await supabase.from("stakes").insert([
+      { user_id: userId, stake: "1/2" },
+      { user_id: userId, stake: "2/5" },
+    ]);
+
+    const { error: gameTypesError } = await supabase.from("game_types").insert([
+      { user_id: userId, game_type: "No-Limit Hold'em" },
+      { user_id: userId, game_type: "Pot-Limit Omaha" },
+    ]);
+
+    const { error: locationsError } = await supabase.from("locations").insert([
+      { user_id: userId, location: "Home Game" },
+      { user_id: userId, location: "MGM National" },
+    ]);
+
+    if (stakesError || gameTypesError || locationsError) {
+      console.error("Error inserting default data", {
+        stakesError,
+        gameTypesError,
+        locationsError,
+      });
+      return encodedRedirect(
+        "error",
+        "/sign-up",
+        "Sign-up successful, but there was an issue setting up your account. Please contact support."
+      );
+    }
+  } catch (error) {
+    console.error("Error inserting default data:", error);
+    return encodedRedirect(
+      "error",
+      "/sign-up",
+      "Sign-up successful, but there was an issue setting up your account. Please contact support."
+    );
+  }
+
+  // Redirect on success
+  return encodedRedirect(
+    "success",
+    "/sign-up",
+    "Thanks for signing up! Please check your email for a verification link."
+  );
 };
 
 export const signInAction = async (formData: FormData) => {
@@ -133,6 +182,50 @@ export const signOutAction = async () => {
   return redirect("/sign-in");
 };
 
-export const addSessionAction = async (formData: FormData) => {
-  console.log(formData);
+export const getUserLocations = async (userId: string): Promise<Location[]> => {
+  const supabase = await createClient();
+  try {
+    const { data, error } = await supabase.from("locations").select("location").eq("user_id", userId)
+    if (error) {
+        console.error("Error fetching locations:", error.message);
+        return []
+    } else {
+        return data
+    }
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    return []
+  }
+}
+
+export const getUserStakes = async (userId: string): Promise<Stakes[]> => {
+  const supabase = await createClient();
+  try {
+    const { data, error } = await supabase.from("stakes").select("stake").eq("user_id", userId)
+    if (error) {
+        console.error("Error fetching stakes:", error.message);
+        return []
+    } else {
+        return data
+    }
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    return []
+  }
+}
+
+export const getUserGameTypes = async (userId: string): Promise<GameTypes[]> => {
+  const supabase = await createClient();
+  try {
+    const { data, error } = await supabase.from("game_types").select("game_type").eq("user_id", userId)
+    if (error) {
+        console.error("Error fetching game types:", error.message);
+        return []
+    } else {
+        return data
+    }
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    return []
+  }
 }
