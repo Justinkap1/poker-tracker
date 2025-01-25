@@ -1,4 +1,4 @@
-import FormResponse from "@/components/shared/add-session-form";
+import FormResponse from "@/app/protected/add-session/components/add-session-form";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { Location, Stakes, GameTypes } from "@/lib/interfaces";
