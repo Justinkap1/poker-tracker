@@ -7,6 +7,7 @@ import { addSessionFormSchema, addSessionForm } from '@/lib/types';
 import AddDetailForm from "../components/add-detail-form"
 import { encodedRedirect } from '@/utils/utils';
 import { Session, FormProps } from '@/lib/interfaces';
+import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button';
 
 const FormResponse: React.FC<FormProps> = ({
     userId,
@@ -202,7 +203,7 @@ const FormResponse: React.FC<FormProps> = ({
 
     return (
         <form
-            className="flex flex-col gap-6 min-w-[500px] max-w-[500px] border-gray-500 drop-shadow-lg rounded-md p-8 bg-[#F6F6F6]"
+            className="flex flex-col items-center gap-6 min-w-[500px] max-w-[500px] border-gray-500 drop-shadow-lg rounded-md p-8 bg-[#F6F6F6]"
             onSubmit={currentSession ? handleUpdateSession : handleAddSession}
         >
             {formItems.map((item, index) => (
@@ -264,13 +265,11 @@ const FormResponse: React.FC<FormProps> = ({
                     </div>
                 </div>
             ))}
-            <button
-                className="mt-8 bg-black text-white rounded-md h-10 w-full"
-                type="submit"
-                disabled={submitting}
+            <InteractiveHoverButton
+                className='w-[164px]'
             >
                 {submitting ? "Submitting..." : (currentSession ? "Update Session" : "Add Session")}
-            </button>
+            </InteractiveHoverButton>
         </form>
     );
 };

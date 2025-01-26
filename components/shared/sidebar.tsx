@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils"
 
 export default function Sidebar() {
     const pathName = usePathname();
-    console.log(pathName)
     return (
         <div className="flex flex-col h-screen bg-[#F6F6F6] text-black w-32 justify-between py-12 border-r border-2">
             <div className="flex justify-center">
@@ -24,7 +23,7 @@ export default function Sidebar() {
                 <Button
                     variant="sidebar"
                     size="sidebar"
-                    className={cn(pathName === "/protected" && "scale-125")}
+                    className={cn(pathName === "/protected" && "bg-[#ABD7E6]")}
                 >
                     <a href="/protected">
                         <ChartBarIncreasing width={40} height={40} />
@@ -33,7 +32,7 @@ export default function Sidebar() {
                 <Button
                     variant="sidebar"
                     size="sidebar"
-                    className={cn(pathName === "/protected/add-session" && "scale-125")}
+                    className={cn(pathName === "/protected/add-session" && "bg-[#ABD7E6]")}
                 >
                     <a href="/protected/add-session">
                         <CirclePlus width={40} height={40} />
@@ -42,7 +41,7 @@ export default function Sidebar() {
                 <Button
                     variant="sidebar"
                     size="sidebar"
-                    className={cn(pathName === "/protected/view-sessions" && "scale-125")}
+                    className={cn(pathName === "/protected/view-sessions" && "bg-[#ABD7E6]")}
                 >
                     <a href="/protected/view-sessions">
                         <Pencil width={40} height={40} />
