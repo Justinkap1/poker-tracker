@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
 import { addSessionFormSchema, addSessionForm } from '@/lib/types';
 import AddDetailForm from "../components/add-detail-form"
+import { encodedRedirect } from '@/utils/utils';
 
 interface formProps {
     userId: string;
@@ -83,7 +84,7 @@ const FormResponse: React.FC<formProps> = ({ userId, locations, stakes, game_typ
 
         if (endTimestamp <= startTimestamp) {
             setErrors({
-                endTime: "End time must be after the start time.",
+                end_time: "End time must be after the start time.",
             });
             setSubmitting(false);
             return;
@@ -107,7 +108,6 @@ const FormResponse: React.FC<formProps> = ({ userId, locations, stakes, game_typ
                 alert("Error submitting session data.");
                 setSubmitting(false);
             } else {
-                alert("Survey data submitted successfully!");
                 setFormData({
                     game_type: "",
                     stake: "",
@@ -123,15 +123,20 @@ const FormResponse: React.FC<formProps> = ({ userId, locations, stakes, game_typ
             console.error("Error:", error);
             alert("Something went wrong.");
         }
+        encodedRedirect(
+            "success",
+            "/protected/add-session",
+            `Your session has been added successfully!`
+        )
     };
 
     return (
         <form
-            className="flex flex-col min-w-[500px] max-w-[500px] border-black border-2 rounded-md p-8 bg-[#F6F6F6]"
+            className="flex flex-col gap-6 min-w-[500px] max-w-[500px] border-gray-500 drop-shadow-lg rounded-md p-8 bg-[#F6F6F6]"
             onSubmit={handleSubmit}
         >
             {formItems.map((item, index) => (
-                <div className="flex flex-row gap-2 mt-2" key={index}>
+                <div className="flex flex-row gap-2" key={index}>
                     <Label
                         htmlFor={item.name}
                         className="flex items-center text-md min-w-40 max-w-40">
@@ -161,9 +166,9 @@ const FormResponse: React.FC<formProps> = ({ userId, locations, stakes, game_typ
                                             <option value={option} key={index}>{option}</option>
                                         ))}
                                     </select>
-                                    <AddDetailForm 
-                                        detail={item.label} 
-                                        locations={locations.map((loc) => loc.location)} 
+                                    <AddDetailForm
+                                        detail={item.label}
+                                        locations={locations.map((loc) => loc.location)}
                                         stakes={stakes.map((stk) => stk.stake)}
                                         game_types={game_types.map((type) => type.game_type)}
                                         user_id={userId}

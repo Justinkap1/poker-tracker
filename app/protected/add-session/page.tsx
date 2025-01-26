@@ -3,8 +3,10 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { Location, Stakes, GameTypes } from "@/lib/interfaces";
 import { getUserGameTypes, getUserLocations, getUserStakes } from "@/app/actions";
+import { FormMessage, Message } from "@/components/shared/form-message";
 
-export default async function AddSession() {
+export default async function AddSession(props: { searchParams: Promise<Message> }) {
+    const searchParams = await props.searchParams;
     const supabase = await createClient();
 
     const {
@@ -38,9 +40,10 @@ export default async function AddSession() {
     }
 
     return (
-        <div className="flex flex-col w-full h-full py-8 px-20 justify-center items-center">
+        <div className="flex flex-col gap-4 w-full h-full py-8 px-20 justify-center items-center">
             <div className="text-7xl font-bold">Add Session</div>
-            <FormResponse userId={user.id} locations={userLocations} stakes={userStakes} game_types={userGameTypes}/>
+            <FormResponse userId={user.id} locations={userLocations} stakes={userStakes} game_types={userGameTypes} />
+            <FormMessage message={searchParams} />
         </div>
     );
 }

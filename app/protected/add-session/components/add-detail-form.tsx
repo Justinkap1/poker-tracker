@@ -10,11 +10,12 @@ import {
     AlertDialogDescription,
     AlertDialogTitle,
     AlertDialogTrigger,
-  } from "@/components/ui/alert-dialogue"
+} from "@/components/ui/alert-dialogue"
 import { Button } from "@/components/ui/button"
 import { AddDetailFormProps } from "@/lib/interfaces"
 import { createClient } from "@/utils/supabase/client"
-import { SquarePlus } from "lucide-react"
+import { encodedRedirect } from "@/utils/utils"
+import { Pencil } from "lucide-react"
 import { useState } from "react"
 
 const AddDetailForm: React.FC<AddDetailFormProps> = ({ detail, locations, stakes, game_types, user_id }) => {
@@ -63,7 +64,7 @@ const AddDetailForm: React.FC<AddDetailFormProps> = ({ detail, locations, stakes
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        e.stopPropagation(); 
+        e.stopPropagation();
         console.log(formData)
 
         const itemsToAdd = formData.filter((item) => !originalArray.includes(item) && item.trim() !== "");
@@ -83,17 +84,17 @@ const AddDetailForm: React.FC<AddDetailFormProps> = ({ detail, locations, stakes
                         created_at: currentDate
                     }))
                 )
-                if (addError){
+                if (addError) {
                     console.error("Error adding items:", addError.message);
                 }
             }
 
             if (itemsToDelete.length > 0) {
                 const { error: deleteError } = await supabase
-                .from(dbTable)
-                .delete()
-                .in(dbColumn, itemsToDelete)
-                .eq("user_id", user_id);
+                    .from(dbTable)
+                    .delete()
+                    .in(dbColumn, itemsToDelete)
+                    .eq("user_id", user_id);
 
                 if (deleteError) {
                     console.error("Error deleting items:", deleteError.message);
@@ -103,73 +104,78 @@ const AddDetailForm: React.FC<AddDetailFormProps> = ({ detail, locations, stakes
             for (const item of itemsToUpdate) {
                 const originalIndex = originalArray.findIndex((orig) => orig === item);
                 const newValue = formData[originalIndex];
-    
+
                 const { error: updateError } = await supabase
                     .from(dbTable)
                     .update({ [dbColumn]: newValue })
                     .eq(dbColumn, originalArray[originalIndex])
                     .eq("user_id", user_id)
-    
+
                 if (updateError) {
                     console.error("Error updating item:", updateError.message);
                 }
             }
 
             originalArray = formData
-            
+
         } catch {
             console.error("error connecting to supabase and updating")
         }
+        encodedRedirect(
+            "success",
+            "/protected/add-session",
+            `Your ${detail}s have been updated successfully!`
+        )
     }
 
     return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="outline" className="p-2 h-8 w-8"><SquarePlus width={25} height={25}/></Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Add or edit a {detail.toLowerCase()}</AlertDialogTitle>
-        </AlertDialogHeader>
-        <AlertDialogDescription>
-            Click the + to add a {detail.toLowerCase()} and the - to delete it. Make sure to save your changes or click cancel to revert them.
-        </AlertDialogDescription>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-                {formData.map((option, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                        <input
-                            type="text"
-                            value={option}
-                            onChange={(e) => handleChange(index, e.target.value)}
-                            className="p-2 border rounded-md"
-                        />
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button variant="outline" className="p-2 h-8 w-8"><Pencil width={25} height={25} /></Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Add or edit a {detail.toLowerCase()}</AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogDescription>
+                    Click the + to add a {detail.toLowerCase()} and the - to delete it. Make sure to save your changes or click cancel to revert them.
+                </AlertDialogDescription>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-2">
+                        {formData.map((option, index) => (
+                            <div key={index} className="flex items-center gap-2">
+                                <input
+                                    type="text"
+                                    value={option}
+                                    onChange={(e) => handleChange(index, e.target.value)}
+                                    className="p-2 border rounded-md"
+                                />
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="p-3"
+                                    onClick={() => handleDelete(index)}
+                                >
+                                    -
+                                </Button>
+                            </div>
+                        ))}
                         <Button
                             type="button"
                             variant="outline"
                             className="p-3"
-                            onClick={() => handleDelete(index)}
+                            onClick={() => handleAddition()}
                         >
-                            -
+                            +
                         </Button>
                     </div>
-                ))}
-                <Button
-                    type="button"
-                    variant="outline"
-                    className="p-3"
-                    onClick={() => handleAddition()}
-                >
-                    +
-                </Button>
-            </div>
-            <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => handleCancel()}>Cancel</AlertDialogCancel>
-                <AlertDialogAction type="submit">Save</AlertDialogAction>
-            </AlertDialogFooter>
-        </form>
-      </AlertDialogContent>
-    </AlertDialog>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => handleCancel()}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction type="submit">Save</AlertDialogAction>
+                    </AlertDialogFooter>
+                </form>
+            </AlertDialogContent>
+        </AlertDialog>
     )
 }
 
