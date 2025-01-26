@@ -11,7 +11,7 @@ import { Session, FormProps } from '@/lib/interfaces';
 const FormResponse: React.FC<FormProps> = ({
     userId,
     locations,
-    stakes, 
+    stakes,
     game_types,
     currentSession
 }) => {
@@ -92,7 +92,35 @@ const FormResponse: React.FC<FormProps> = ({
 
         setErrors({});
 
-        console.log(parsedData)
+        try {
+            const { error } = await supabase
+                .from("sessions")
+                .update({
+                    game_type: parsedData.game_type,
+                    location: parsedData.location,
+                    stake: parsedData.stake,
+                    buyin: parsedData.buyin,
+                    cashout: parsedData.cashout,
+                    start_time: parsedData.start_time,
+                    end_time: parsedData.end_time
+                })
+                .eq("id", currentSession?.id)
+
+            if (error) {
+                console.error("There was an error trying to update session", error)
+            } else {
+                setSubmitting(false)
+            }
+        } catch (err) {
+            console.error("Error:", err)
+            alert("Something went wrong")
+        }
+
+        encodedRedirect(
+            "success",
+            "/protected/edit-session",
+            `Your session has been updated successfully!`
+        )
     }
 
     const handleAddSession = async (e: React.FormEvent<HTMLFormElement>) => {

@@ -28,7 +28,7 @@ export interface Session {
     end_time: string,
     time_played?: number,
     net_result?: number,
-    id?: string,
+    id?: number,
 }
 
 export interface FormProps {
