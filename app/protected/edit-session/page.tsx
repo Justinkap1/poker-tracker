@@ -29,7 +29,7 @@ export default async function EditSession(props: { searchParams: Promise<Message
     return (
         <div className="flex flex-col w-full h-full p-8 pl-20 gap-4">
             <FormMessage message={searchParams} />
-            <div className="text-7xl font-bold">View Sessions</div>
+            <div className="text-5xl font-bold">View Sessions</div>
             {userSessions.map((session, index) => (
                 <div key={index} className="flex flex-col gap-1 border justify-evenly">
                     <span>Game type: {session.game_type}</span>

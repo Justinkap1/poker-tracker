@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { CirclePlus, ChartBarIncreasing, Pencil, CircleUserRound, LogOut } from "lucide-react"
 import { signOutAction } from "@/app/actions"
+import { Button } from "../ui/button"
 
 export default function Sidebar() {
     return (
@@ -14,9 +15,30 @@ export default function Sidebar() {
                 />
             </div>
             <ul className="flex flex-col justify-center items-center gap-4">
-                <a href="/protected"><ChartBarIncreasing width={40} height={40} /></a>
-                <a href="/protected/add-session"><CirclePlus width={40} height={40} /></a>
-                <a href="/protected/edit-session"><Pencil width={40} height={40} /></a>
+                <Button 
+                    variant="sidebar"
+                    size="sidebar"
+                >
+                    <a href="/protected">
+                        <ChartBarIncreasing width={40} height={40} />
+                    </a>
+                </Button>
+                <Button 
+                    variant="sidebar" 
+                    size="sidebar"
+                >
+                    <a href="/protected/add-session">
+                        <CirclePlus width={40} height={40} />
+                    </a>
+                </Button>
+                <Button 
+                    variant="sidebar" 
+                    size="sidebar"
+                >
+                    <a href="/protected/edit-session">
+                        <Pencil width={40} height={40} />
+                    </a>
+                </Button>
             </ul>
             <ul className="flex flex-col justify-center items-center gap-2">
                 <a href="/protected/profile"><CircleUserRound width={40} height={40} /></a>
