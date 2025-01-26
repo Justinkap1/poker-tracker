@@ -118,7 +118,7 @@ const FormResponse: React.FC<FormProps> = ({
 
         encodedRedirect(
             "success",
-            "/protected/edit-session",
+            "/protected/view-sessions",
             `Your session has been updated successfully!`
         )
     }
@@ -221,7 +221,7 @@ const FormResponse: React.FC<FormProps> = ({
                                     value={formData[item.name]}
                                     onChange={handleChange}
                                     placeholder={item.placeholder}
-                                    className="border border-black rounded-md px-3 py-2"
+                                    className="border border-black rounded-md px-3 py-2 truncate w-[270px]"
                                     required
                                 />
                             ) : item.options ? (
@@ -230,7 +230,7 @@ const FormResponse: React.FC<FormProps> = ({
                                         value={formData[item.name]}
                                         onChange={handleChange}
                                         required
-                                        className="border border-black rounded-md px-3 py-2">
+                                        className="border border-black rounded-md px-3 py-2 truncate w-[224px]">
                                         <option value="" disabled hidden>{item.placeholder}</option>
                                         {item.options.map((option, index) => (
                                             <option value={option} key={index}>{option}</option>
@@ -251,7 +251,7 @@ const FormResponse: React.FC<FormProps> = ({
                                     value={formData[item.name]}
                                     onChange={handleChange}
                                     placeholder={item.placeholder}
-                                    className="border border-black rounded-md px-3 py-2"
+                                    className="border border-black rounded-md px-3 py-2 truncate w-[270px]"
                                     required
                                 />
                             )}

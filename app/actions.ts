@@ -31,8 +31,8 @@ export const signUpAction = async (formData: FormData) => {
   if (signUpError) {
     console.error(signUpError.code + " " + signUpError.message);
     return encodedRedirect("error", "/sign-up", signUpError.message);
-  } 
-  
+  }
+
   const userId = signUpData.user?.id;
 
   if (!userId) {
@@ -55,8 +55,8 @@ export const signUpAction = async (formData: FormData) => {
     ]);
 
     const { error: locationsError } = await supabase.from("locations").insert([
-      { user_id: userId, location: "Home Game" },
-      { user_id: userId, location: "MGM National" },
+      { user_id: userId, location: "Your Local Home Game" },
+      { user_id: userId, location: "Your Local Casino" },
     ]);
 
     if (stakesError || gameTypesError || locationsError) {
@@ -80,7 +80,6 @@ export const signUpAction = async (formData: FormData) => {
     );
   }
 
-  // Redirect on success
   return encodedRedirect(
     "success",
     "/sign-up",

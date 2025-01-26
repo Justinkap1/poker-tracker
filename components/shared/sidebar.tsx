@@ -1,9 +1,15 @@
+'use client'
+
 import Image from "next/image"
 import { CirclePlus, ChartBarIncreasing, Pencil, CircleUserRound, LogOut } from "lucide-react"
 import { signOutAction } from "@/app/actions"
 import { Button } from "../ui/button"
+import { usePathname } from 'next/navigation'
+import { cn } from "@/lib/utils"
 
 export default function Sidebar() {
+    const pathName = usePathname();
+    console.log(pathName)
     return (
         <div className="flex flex-col h-screen bg-[#F6F6F6] text-black w-32 justify-between py-12 border-r border-2">
             <div className="flex justify-center">
@@ -15,27 +21,30 @@ export default function Sidebar() {
                 />
             </div>
             <ul className="flex flex-col justify-center items-center gap-4">
-                <Button 
+                <Button
                     variant="sidebar"
                     size="sidebar"
+                    className={cn(pathName === "/protected" && "scale-125")}
                 >
                     <a href="/protected">
                         <ChartBarIncreasing width={40} height={40} />
                     </a>
                 </Button>
-                <Button 
-                    variant="sidebar" 
+                <Button
+                    variant="sidebar"
                     size="sidebar"
+                    className={cn(pathName === "/protected/add-session" && "scale-125")}
                 >
                     <a href="/protected/add-session">
                         <CirclePlus width={40} height={40} />
                     </a>
                 </Button>
-                <Button 
-                    variant="sidebar" 
+                <Button
+                    variant="sidebar"
                     size="sidebar"
+                    className={cn(pathName === "/protected/view-sessions" && "scale-125")}
                 >
-                    <a href="/protected/edit-session">
+                    <a href="/protected/view-sessions">
                         <Pencil width={40} height={40} />
                     </a>
                 </Button>
