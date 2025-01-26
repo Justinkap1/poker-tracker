@@ -1,6 +1,8 @@
 import { getUserSessions } from "@/api/api";
+import { Button } from "@/components/ui/button";
 import { Session } from "@/lib/interfaces";
 import { createClient } from "@/utils/supabase/server";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function Notes() {
@@ -23,8 +25,6 @@ export default async function Notes() {
         console.error("error fetching user sessions:", err)
     }
 
-    //console.log(userSessions)
-
     return (
         <div className="flex flex-col w-full h-full p-8 pl-20 gap-4">
             <div className="text-7xl font-bold">Edit Session</div>
@@ -37,8 +37,17 @@ export default async function Notes() {
                     <span>Cash out: ${session.cashout}</span>
                     <span>Start Time: {session.start_time}</span>
                     <span>End Time: {session.end_time}</span>
-                    <span>Time Played: {Math.round(session.time_played * 100)/100} Hours</span>
-                    <span>Net Result: {session.net_result > 0 ? "+" : "-"}${Math.abs(session.net_result)}</span>
+                    {session.time_played && (
+                        <span>Time Played: {Math.round(session.time_played * 100)/100} Hours</span>
+                    )}
+                    {session.net_result && (
+                        <span>Net Result: {session.net_result > 0 ? "+" : "-"}${Math.abs(session.net_result)}</span>
+                    )}
+                    {session.id && (
+                        <Link href={`/protected/add-session?session=${session.id}`}>
+                            <Button>Edit Session</Button>
+                        </Link>
+                    )}
                 </div>
             ))}
         </div>

@@ -1,7 +1,8 @@
 export type Message =
   | { success: string }
   | { error: string }
-  | { message: string };
+  | { message: string }
+  | { session: string }
 
 export function FormMessage({ message }: { message: Message }) {
   return (
@@ -18,6 +19,9 @@ export function FormMessage({ message }: { message: Message }) {
       )}
       {"message" in message && (
         <div className="text-foreground border-l-2 px-4">{message.message}</div>
+      )}
+      {"session" in message && (
+        <div className="text-foreground border-l-2 px-4">{message.session}</div>
       )}
     </div>
   );

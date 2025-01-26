@@ -22,10 +22,19 @@ export interface Session {
     game_type: string,
     stake: string,
     location: string,
-    buyin: number,
-    cashout: number,
+    buyin: string,
+    cashout: string,
     start_time: string,
     end_time: string,
-    time_played: number,
-    net_result: number
+    time_played?: number,
+    net_result?: number,
+    id?: string,
+}
+
+export interface FormProps {
+    userId: string;
+    locations: Array<{ location: string }>;
+    stakes: Array<{ stake: string }>;
+    game_types: Array<{ game_type: string }>;
+    currentSession?: Session
 }

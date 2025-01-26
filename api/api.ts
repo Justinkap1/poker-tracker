@@ -52,7 +52,7 @@ export const getUserGameTypes = async (userId: string): Promise<GameTypes[]> => 
 export const getUserSessions = async (userId: string): Promise<Session[]> => {
     const supabase = await createClient();
     try {
-        const { data, error } = await supabase.from("sessions").select("game_type, stake, location, time_played, start_time, end_time, buyin, cashout, net_result").eq("user_id", userId)
+        const { data, error } = await supabase.from("sessions").select("game_type, stake, location, time_played, start_time, end_time, buyin, cashout, net_result, id").eq("user_id", userId)
         if (error) {
             console.error("Error fetching sessions:", error.message)
         } else {
@@ -60,6 +60,22 @@ export const getUserSessions = async (userId: string): Promise<Session[]> => {
         }
     }  catch (err) {
         console.error("Unexpected error:", err);
+        return []
+    }
+    return []
+}
+
+export const getUserSessionByID = async (userId: string, sessionId: string): Promise<Session[]> => {
+    const supabase = await createClient();
+    try {
+        const { data, error } = await supabase.from("sessions").select("game_type, stake, location, start_time, end_time, buyin, cashout").eq("user_id", userId).eq("id", sessionId)
+        if (error) {
+            console.error("Error fetching session:", error.message)
+        } else {
+            return data
+        }
+    } catch (err) {
+        console.error("Unexpected error:", err)
         return []
     }
     return []
