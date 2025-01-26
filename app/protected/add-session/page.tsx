@@ -2,7 +2,7 @@ import FormResponse from "@/app/protected/add-session/components/add-session-for
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { Location, Stakes, GameTypes } from "@/lib/interfaces";
-import { getUserGameTypes, getUserLocations, getUserStakes } from "@/app/actions";
+import { getUserGameTypes, getUserLocations, getUserStakes } from "@/api/api";
 import { FormMessage, Message } from "@/components/shared/form-message";
 
 export default async function AddSession(props: { searchParams: Promise<Message> }) {
