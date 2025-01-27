@@ -1,10 +1,10 @@
 import { GameTypes, Stakes, Location, Session } from "@/lib/interfaces";
 import { createClient } from "@/utils/supabase/server";
 
-export const getUserLocations = async (userId: string): Promise<Location[]> => {
+export const getUserLocations = async (userId: string, isCash: boolean): Promise<Location[]> => {
     const supabase = await createClient();
     try {
-        const { data, error } = await supabase.from("locations").select("location").eq("user_id", userId)
+        const { data, error } = await supabase.from("locations").select("location").eq("user_id", userId).eq("is_cash", isCash)
         if (error) {
             console.error("Error fetching locations:", error.message);
             return []
@@ -17,10 +17,10 @@ export const getUserLocations = async (userId: string): Promise<Location[]> => {
     }
 }
 
-export const getUserStakes = async (userId: string): Promise<Stakes[]> => {
+export const getUserStakes = async (userId: string, isCash: boolean): Promise<Stakes[]> => {
     const supabase = await createClient();
     try {
-        const { data, error } = await supabase.from("stakes").select("stake").eq("user_id", userId)
+        const { data, error } = await supabase.from("stakes").select("stake").eq("user_id", userId).eq("is_cash", isCash)
         if (error) {
             console.error("Error fetching stakes:", error.message);
             return []
@@ -33,10 +33,10 @@ export const getUserStakes = async (userId: string): Promise<Stakes[]> => {
     }
 }
 
-export const getUserGameTypes = async (userId: string): Promise<GameTypes[]> => {
+export const getUserGameTypes = async (userId: string, isCash: boolean): Promise<GameTypes[]> => {
     const supabase = await createClient();
     try {
-        const { data, error } = await supabase.from("game_types").select("game_type").eq("user_id", userId)
+        const { data, error } = await supabase.from("game_types").select("game_type").eq("user_id", userId).eq("is_cash", isCash)
         if (error) {
             console.error("Error fetching game types:", error.message);
             return []
@@ -49,7 +49,7 @@ export const getUserGameTypes = async (userId: string): Promise<GameTypes[]> => 
     }
 }
 
-export const getUserSessions = async (userId: string): Promise<Session[]> => {
+export const getUserCashSessions = async (userId: string): Promise<Session[]> => {
     const supabase = await createClient();
     try {
         const { data, error } = await supabase.from("sessions").select("game_type, stake, location, time_played, start_time, end_time, buyin, cashout, net_result, id").eq("user_id", userId)
@@ -65,7 +65,7 @@ export const getUserSessions = async (userId: string): Promise<Session[]> => {
     return []
 }
 
-export const getUserSessionByID = async (userId: string, sessionId: string): Promise<Session[]> => {
+export const getUserCashSessionByID = async (userId: string, sessionId: string): Promise<Session[]> => {
     const supabase = await createClient();
     try {
         const { data, error } = await supabase.from("sessions").select("game_type, stake, location, start_time, end_time, buyin, cashout, id").eq("user_id", userId).eq("id", sessionId)

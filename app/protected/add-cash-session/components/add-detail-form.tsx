@@ -134,7 +134,7 @@ const AddDetailForm: React.FC<AddDetailFormProps> = ({ detail, locations, stakes
         if (updated) {
             encodedRedirect(
                 "success",
-                "/protected/add-session",
+                "/protected/add-cash-session",
                 `Your ${detail}s have been updated successfully!`
             )
         }

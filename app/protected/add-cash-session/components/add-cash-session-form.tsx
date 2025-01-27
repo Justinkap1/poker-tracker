@@ -4,12 +4,12 @@ import React, { useState } from 'react';
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
 import { addSessionFormSchema, addSessionForm } from '@/lib/types';
-import AddDetailForm from "../components/add-detail-form"
+import AddDetailForm from "./add-detail-form"
 import { encodedRedirect } from '@/utils/utils';
 import { Session, FormProps } from '@/lib/interfaces';
 import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button';
 
-const FormResponse: React.FC<FormProps> = ({
+const CashForm: React.FC<FormProps> = ({
     userId,
     locations,
     stakes,
@@ -238,7 +238,7 @@ const FormResponse: React.FC<FormProps> = ({
         if (updated) {
             encodedRedirect(
                 "success",
-                "/protected/add-session",
+                "/protected/add-cash-session",
                 `Your session has been added successfully!`
             )
         }
@@ -318,4 +318,4 @@ const FormResponse: React.FC<FormProps> = ({
     );
 };
 
-export default FormResponse;
+export default CashForm;

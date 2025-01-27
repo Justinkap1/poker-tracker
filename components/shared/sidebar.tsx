@@ -1,7 +1,7 @@
 'use client'
 
 import Image from "next/image"
-import { CirclePlus, ChartBarIncreasing, Pencil, CircleUserRound, LogOut } from "lucide-react"
+import { DollarSign, ChartBarIncreasing, Pencil, CircleUserRound, LogOut, Trophy } from "lucide-react"
 import { signOutAction } from "@/app/actions"
 import { Button } from "../ui/button"
 import { usePathname } from 'next/navigation'
@@ -32,10 +32,19 @@ export default function Sidebar() {
                 <Button
                     variant="sidebar"
                     size="sidebar"
-                    className={cn(pathName === "/protected/add-session" && "bg-[#ABD7E6]")}
+                    className={cn(pathName === "/protected/add-cash-session" && "bg-[#ABD7E6]")}
                 >
-                    <a href="/protected/add-session">
-                        <CirclePlus width={40} height={40} />
+                    <a href="/protected/add-cash-session">
+                        <DollarSign width={40} height={40} />
+                    </a>
+                </Button>
+                <Button
+                    variant="sidebar"
+                    size="sidebar"
+                    className={cn(pathName === "/protected/add-tournament-session" && "bg-[#ABD7E6]")}
+                >
+                    <a href="/protected/add-tournament-session">
+                        <Trophy width={40} height={40} />
                     </a>
                 </Button>
                 <Button

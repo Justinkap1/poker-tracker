@@ -1,4 +1,4 @@
-import { getUserSessions } from "@/api/api";
+import { getUserCashSessions } from "@/api/api";
 import { FormMessage, Message } from "@/components/shared/form-message";
 import { Button } from "@/components/ui/button";
 import { Session } from "@/lib/interfaces";
@@ -22,7 +22,7 @@ export default async function EditSession(props: { searchParams: Promise<Message
     let userSessions: Session[] = []
 
     try {
-        userSessions = await getUserSessions(user.id)
+        userSessions = await getUserCashSessions(user.id)
     } catch (err) {
         console.error("error fetching user sessions:", err)
     }
@@ -34,7 +34,7 @@ export default async function EditSession(props: { searchParams: Promise<Message
                 userSessions.length === 0 ? (
                     <div className="flex flex-row items-center gap-1">
                         <span>You have no sessions recorded. Go to the</span>
-                        <Link href="/protected/add-session" className="underline hover:text-[#C6E4EE]">
+                        <Link href="/protected/add-cash-session" className="underline hover:text-[#C6E4EE]">
                             add sessions page
                         </Link>
                         <span>to get started</span>

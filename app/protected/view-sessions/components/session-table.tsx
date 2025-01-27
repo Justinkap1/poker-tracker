@@ -83,7 +83,7 @@ export default function SessionTable({ userSessions }: { userSessions: Session[]
                             )}
                             {session.id && (
                                 <TableCell>
-                                    <Link href={`/protected/add-session?session=${session.id}`}>
+                                    <Link href={`/protected/add-cash-session?session=${session.id}`}>
                                         <Button>Edit Session</Button>
                                     </Link>
                                 </TableCell>

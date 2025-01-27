@@ -31,10 +31,28 @@ export interface Session {
     id?: number,
 }
 
+export interface TournamentSession {
+    game_type: string,
+    location: string,
+    buyin: string,
+    cashout: string,
+    placement: string,
+    start_date: string,
+    net_result?: number,
+    id?: number
+}
+
 export interface FormProps {
     userId: string;
     locations: Array<{ location: string }>;
     stakes: Array<{ stake: string }>;
     game_types: Array<{ game_type: string }>;
     currentSession?: Session
+}
+
+export interface TournamentFormProps {
+    userId: string;
+    locations: Array<{ location: string }>;
+    game_types: Array<{ game_type: string }>;
+    currentSession?: TournamentSession
 }

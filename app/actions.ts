@@ -45,18 +45,22 @@ export const signUpAction = async (formData: FormData) => {
 
   try {
     const { error: stakesError } = await supabase.from("stakes").insert([
-      { user_id: userId, stake: "1/2" },
-      { user_id: userId, stake: "2/5" },
+      { user_id: userId, stake: "1/2", isCash: true },
+      { user_id: userId, stake: "2/5", isCash: true },
     ]);
 
     const { error: gameTypesError } = await supabase.from("game_types").insert([
-      { user_id: userId, game_type: "No-Limit Hold'em" },
-      { user_id: userId, game_type: "Pot-Limit Omaha" },
+      { user_id: userId, game_type: "No-Limit Hold'em", isCash: true },
+      { user_id: userId, game_type: "Pot-Limit Omaha", isCash: true },
+      { user_id: userId, game_type: "No-Limit Hold'em", isCash: false },
+      { user_id: userId, game_type: "Pot-Limit Omaha", isCash: false },
     ]);
 
     const { error: locationsError } = await supabase.from("locations").insert([
-      { user_id: userId, location: "Your Local Home Game" },
-      { user_id: userId, location: "Your Local Casino" },
+      { user_id: userId, location: "Your Local Home Game", isCash: true },
+      { user_id: userId, location: "Your Local Casino", isCash: true },
+      { user_id: userId, location: "Your Local Home Game", isCash: false },
+      { user_id: userId, location: "Your Local Casino", isCash: false },
     ]);
 
     if (stakesError || gameTypesError || locationsError) {
