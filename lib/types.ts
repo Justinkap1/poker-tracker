@@ -8,14 +8,12 @@ export const addSessionFormSchema = z.object({
         .number({
             invalid_type_error: "must be a number 0 or above",
         })
-        .min(0, "must be a number 0 or above")
-        .refine((val) => !isNaN(val), "must be a number 0 or above"),
+        .min(0, "must be a number 0 or above"),
     cashout: z
         .number({
             invalid_type_error: "must be a number 0 or above",
         })
-        .min(0, "must be a number 0 or above")
-        .refine((val) => !isNaN(val), "must be a number 0 or above"),
+        .min(0, "must be a number 0 or above"),
     start_time: z
         .string()
         .refine(

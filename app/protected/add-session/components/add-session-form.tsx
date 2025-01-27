@@ -54,9 +54,12 @@ const FormResponse: React.FC<FormProps> = ({
         setFormData({ ...formData, [name]: value });
     };
 
+
     const handleUpdateSession = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSubmitting(true);
+
+        let updated = false
 
         const parsedData = {
             game_type: formData.game_type,
@@ -110,6 +113,7 @@ const FormResponse: React.FC<FormProps> = ({
             if (error) {
                 console.error("There was an error trying to update session", error)
             } else {
+                updated = true
                 setSubmitting(false)
             }
         } catch (err) {
@@ -117,11 +121,13 @@ const FormResponse: React.FC<FormProps> = ({
             alert("Something went wrong")
         }
 
-        encodedRedirect(
-            "success",
-            "/protected/view-sessions",
-            `Your session has been updated successfully!`
-        )
+        if (updated) {
+            encodedRedirect(
+                "success",
+                "/protected/view-sessions",
+                `Your session has been updated successfully!`
+            )
+        }
     }
 
     const handleAddSession = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -206,6 +212,7 @@ const FormResponse: React.FC<FormProps> = ({
             className="flex flex-col items-center gap-6 min-w-[500px] max-w-[500px] border-gray-500 drop-shadow-lg rounded-md p-8 bg-[#F6F6F6]"
             onSubmit={currentSession ? handleUpdateSession : handleAddSession}
         >
+            <div className="text-5xl font-bold">{currentSession ? "Edit Session" : "Add Session"}</div>
             {formItems.map((item, index) => (
                 <div className="flex flex-row gap-2" key={index}>
                     <Label
@@ -234,7 +241,7 @@ const FormResponse: React.FC<FormProps> = ({
                                         className="border border-black rounded-md px-3 py-2 truncate w-[224px]">
                                         <option value="" disabled hidden>{item.placeholder}</option>
                                         {item.options.map((option, index) => (
-                                            <option value={option} key={index}>{option}</option>
+                                            <option value={option} key={index} className="">{option}</option>
                                         ))}
                                     </select>
                                     <AddDetailForm
@@ -266,7 +273,7 @@ const FormResponse: React.FC<FormProps> = ({
                 </div>
             ))}
             <InteractiveHoverButton
-                className='w-[164px]'
+                className='w-[1/2]'
             >
                 {submitting ? "Submitting..." : (currentSession ? "Update Session" : "Add Session")}
             </InteractiveHoverButton>

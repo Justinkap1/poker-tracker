@@ -65,13 +65,16 @@ const AddDetailForm: React.FC<AddDetailFormProps> = ({ detail, locations, stakes
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log(formData)
 
-        const itemsToAdd = formData.filter((item) => !originalArray.includes(item) && item.trim() !== "");
+        setFormData(formData.filter((item) => item !== ""));
+
+        const itemsToAdd = formData.filter((item) => !originalArray.includes(item) && item !== "");
         const itemsToDelete = originalArray.filter((item) => !formData.includes(item));
         const itemsToUpdate = formData.filter((item, index) => originalArray[index] && originalArray[index] !== item);
 
         //console.log(itemsToAdd, itemsToDelete, itemsToUpdate, dbTable, dbColumn)
+
+        let updated = false;
 
         try {
             const currentDate = new Date().toISOString().split("T")[0];
@@ -86,6 +89,8 @@ const AddDetailForm: React.FC<AddDetailFormProps> = ({ detail, locations, stakes
                 )
                 if (addError) {
                     console.error("Error adding items:", addError.message);
+                } else {
+                    updated = true
                 }
             }
 
@@ -98,6 +103,9 @@ const AddDetailForm: React.FC<AddDetailFormProps> = ({ detail, locations, stakes
 
                 if (deleteError) {
                     console.error("Error deleting items:", deleteError.message);
+                }
+                else {
+                    updated = true
                 }
             }
 
@@ -113,6 +121,8 @@ const AddDetailForm: React.FC<AddDetailFormProps> = ({ detail, locations, stakes
 
                 if (updateError) {
                     console.error("Error updating item:", updateError.message);
+                } else {
+                    updated = true
                 }
             }
 
@@ -121,11 +131,13 @@ const AddDetailForm: React.FC<AddDetailFormProps> = ({ detail, locations, stakes
         } catch {
             console.error("error connecting to supabase and updating")
         }
-        encodedRedirect(
-            "success",
-            "/protected/add-session",
-            `Your ${detail}s have been updated successfully!`
-        )
+        if (updated) {
+            encodedRedirect(
+                "success",
+                "/protected/add-session",
+                `Your ${detail}s have been updated successfully!`
+            )
+        }
     }
 
     return (
