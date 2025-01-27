@@ -64,14 +64,14 @@ const FormResponse: React.FC<FormProps> = ({
         const moneyRegex = /^(\d{1,9}|\.\d{1,2}|\d{1,9}\.\d{1,2})$/;
         if (!moneyRegex.test(formData.buyin)){
             setErrors({
-                buyin: "Buy in must be a valid money amount (123.12)"
+                buyin: "Buy in must be a valid money amount (can include cents)"
             })
             setSubmitting(false)
             return;
         }
         if (!moneyRegex.test(formData.cashout)){
             setErrors({
-                cashout: "Cash out must be a valid money amount (123.12)"
+                cashout: "Cash out must be a valid money amount (can include cents)"
             })
             setSubmitting(false)
             return;
@@ -155,14 +155,14 @@ const FormResponse: React.FC<FormProps> = ({
         const moneyRegex = /^(\d{1,9}|\.\d{1,2}|\d{1,9}\.\d{1,2})$/;
         if (!moneyRegex.test(formData.buyin)){
             setErrors({
-                buyin: "Buy in must be a valid money amount (123.12)"
+                buyin: "Buy in must be a valid money amount (can include cents)"
             })
             setSubmitting(false)
             return;
         }
         if (!moneyRegex.test(formData.cashout)){
             setErrors({
-                cashout: "Cash out must be a valid money amount (123.12)"
+                cashout: "Cash out must be a valid money amount (can include cents)"
             })
             setSubmitting(false)
             return;
