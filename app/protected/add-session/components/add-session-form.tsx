@@ -61,6 +61,22 @@ const FormResponse: React.FC<FormProps> = ({
 
         let updated = false
 
+        const moneyRegex = /^(\d{1,9}|\.\d{1,2}|\d{1,9}\.\d{1,2})$/;
+        if (!moneyRegex.test(formData.buyin)){
+            setErrors({
+                buyin: "Buy in must be a valid money amount (123.12)"
+            })
+            setSubmitting(false)
+            return;
+        }
+        if (!moneyRegex.test(formData.cashout)){
+            setErrors({
+                cashout: "Cash out must be a valid money amount (123.12)"
+            })
+            setSubmitting(false)
+            return;
+        }
+
         const parsedData = {
             game_type: formData.game_type,
             stake: formData.stake,
@@ -134,6 +150,24 @@ const FormResponse: React.FC<FormProps> = ({
         e.preventDefault();
         setSubmitting(true);
 
+        let updated = false;
+
+        const moneyRegex = /^(\d{1,9}|\.\d{1,2}|\d{1,9}\.\d{1,2})$/;
+        if (!moneyRegex.test(formData.buyin)){
+            setErrors({
+                buyin: "Buy in must be a valid money amount (123.12)"
+            })
+            setSubmitting(false)
+            return;
+        }
+        if (!moneyRegex.test(formData.cashout)){
+            setErrors({
+                cashout: "Cash out must be a valid money amount (123.12)"
+            })
+            setSubmitting(false)
+            return;
+        }
+
         const parsedData = {
             game_type: formData.game_type,
             stake: formData.stake,
@@ -195,16 +229,19 @@ const FormResponse: React.FC<FormProps> = ({
                     end_time: "",
                 })
                 setSubmitting(false);
+                updated = true
             }
         } catch (error) {
             console.error("Error:", error);
             alert("Something went wrong.");
         }
-        encodedRedirect(
-            "success",
-            "/protected/add-session",
-            `Your session has been added successfully!`
-        )
+        if (updated) {
+            encodedRedirect(
+                "success",
+                "/protected/add-session",
+                `Your session has been added successfully!`
+            )
+        }
     };
 
     return (
