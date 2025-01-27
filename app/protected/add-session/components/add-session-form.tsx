@@ -254,7 +254,7 @@ const FormResponse: React.FC<FormProps> = ({
                                 </div>
                             ) : (
                                 <input
-                                    type="text"
+                                    type="number"
                                     name={item.name}
                                     value={formData[item.name]}
                                     onChange={handleChange}
