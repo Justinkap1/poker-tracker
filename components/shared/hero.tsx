@@ -1,39 +1,23 @@
+import { bebas } from '@/lib/fonts'
+import { MousePointer2 } from 'lucide-react'
+import Link from 'next/link'
+
 export default function Header() {
   return (
-    <div className="flex flex-col gap-16 items-center">
-      <div className="flex gap-8 justify-center items-center">
-        <a
-          href="/sign-up"
-        >
-          Sign Up
-        </a>
-        <span className="border-l rotate-45 h-6" />
-        <a href="/sign-in">
-          Sign in
-        </a>
-      </div>
-      <h1 className="sr-only">Supabase and Next.js Starter Template</h1>
-      <p className="text-3xl lg:text-4xl !leading-tight mx-auto max-w-xl text-center">
-        The fastest way to build apps with{" "}
-        <a
-          href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-          target="_blank"
-          className="font-bold hover:underline"
-          rel="noreferrer"
-        >
-          Supabase
-        </a>{" "}
-        and{" "}
-        <a
-          href="https://nextjs.org/"
-          target="_blank"
-          className="font-bold hover:underline"
-          rel="noreferrer"
-        >
-          Next.js
-        </a>
-      </p>
-      <div className="w-full p-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent my-8" />
+    <div
+      className={`${bebas.className} text-4xl sm:text-7xl flex flex-col gap-2 justify-center items-center border-2 sm:p-32 p-12 rounded-md bg-[radial-gradient(#CFDAFF_1px,transparent_1px)] [background-size:20px_20px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_90%,transparent_100%)]`}
+    >
+      <span>Analyze your play</span>
+      <span>Watch profit soar</span>
+      <Link
+        href="/sign-in"
+        className="flex flex-row gap-2 text-2xl text-gray-600 items-center"
+      >
+        <span>Get started</span>
+        <span>
+          <MousePointer2 width={20} height={20} />
+        </span>
+      </Link>
     </div>
-  );
+  )
 }
