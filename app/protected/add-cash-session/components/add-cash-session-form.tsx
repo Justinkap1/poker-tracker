@@ -5,9 +5,9 @@ import { Label } from '@/components/ui/label'
 import { createClient } from '@/utils/supabase/client'
 import { addSessionFormSchema, addSessionForm } from '@/lib/types'
 import AddDetailForm from '../../../../components/shared/add-detail-form'
-import { encodedRedirect } from '@/utils/utils'
-import { Session, FormProps } from '@/lib/interfaces'
+import { FormProps } from '@/lib/interfaces'
 import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
+import { redirect } from 'next/navigation'
 
 const CashForm: React.FC<FormProps> = ({
   userId,
@@ -70,6 +70,7 @@ const CashForm: React.FC<FormProps> = ({
       required: true,
     },
   ]
+  const [successMessage, setSuccessMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     game_type: currentSession?.game_type || '',
@@ -175,11 +176,7 @@ const CashForm: React.FC<FormProps> = ({
     }
 
     if (updated) {
-      encodedRedirect(
-        'success',
-        '/protected/view-sessions',
-        `Your session has been updated successfully!`
-      )
+      redirect('/protected/view-sessions')
     }
   }
 
@@ -266,107 +263,104 @@ const CashForm: React.FC<FormProps> = ({
           end_time: '',
         })
         setSubmitting(false)
-        updated = true
+        setSuccessMessage('Your session has been recorded')
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     } catch (error) {
       console.error('Error:', error)
       alert('Something went wrong.')
     }
-    if (updated) {
-      encodedRedirect(
-        'success',
-        '/protected/add-cash-session',
-        `Your session has been added successfully!`
-      )
-    }
   }
 
   return (
-    <form
-      className="flex flex-col items-center gap-6 min-w-[500px] max-w-[500px] border-gray-500 drop-shadow-lg rounded-md p-8 bg-[#F6F6F6]"
-      onSubmit={currentSession ? handleUpdateSession : handleAddSession}
-    >
-      <div className="flex flex-col justify-center items-center">
-        <div className="text-5xl font-bold">
-          {currentSession ? 'Edit Session' : 'Add Session'}
+    <div className="flex flex-col justify-center items-center gap-2">
+      <span className="text-green-500">{successMessage}</span>
+      <form
+        className="flex flex-col items-center gap-6 min-w-[500px] max-w-[500px] border-gray-500 drop-shadow-lg rounded-md p-8 bg-[#F6F6F6]"
+        onSubmit={currentSession ? handleUpdateSession : handleAddSession}
+      >
+        <div className="flex flex-col justify-center items-center">
+          <div className="text-5xl font-bold">
+            {currentSession ? 'Edit Session' : 'Add Session'}
+          </div>
+          <div className="text-md text-gray-600">CASH</div>
         </div>
-        <div className="text-md text-gray-600">CASH</div>
-      </div>
-      {formItems.map((item, index) => (
-        <div className="flex flex-row gap-2" key={index}>
-          <Label
-            htmlFor={item.name}
-            className="flex items-center text-md min-w-40 max-w-40"
-          >
-            {item.label}
-          </Label>
-          <div className="flex flex-col">
-            <div className="flex flex-col rounded-md">
-              {item.name === 'start_time' || item.name === 'end_time' ? (
-                <input
-                  type="datetime-local"
-                  name={item.name}
-                  value={formData[item.name]}
-                  onChange={handleChange}
-                  placeholder={item.placeholder}
-                  className="border border-black rounded-md px-3 py-2 truncate w-[270px]"
-                  required
-                />
-              ) : item.options ? (
-                <div className="flex flex-row gap-4 justify-center items-center">
-                  <select
+        {formItems.map((item, index) => (
+          <div className="flex flex-row gap-2" key={index}>
+            <Label
+              htmlFor={item.name}
+              className="flex items-center text-md min-w-40 max-w-40"
+            >
+              {item.label}
+            </Label>
+            <div className="flex flex-col">
+              <div className="flex flex-col rounded-md">
+                {item.name === 'start_time' || item.name === 'end_time' ? (
+                  <input
+                    type="datetime-local"
                     name={item.name}
                     value={formData[item.name]}
                     onChange={handleChange}
+                    placeholder={item.placeholder}
+                    className="border border-black rounded-md px-3 py-2 truncate w-[270px]"
                     required
-                    className="border border-black rounded-md px-3 py-2 truncate w-[224px]"
-                  >
-                    <option value="" disabled hidden>
-                      {item.placeholder}
-                    </option>
-                    {item.options.map((option, index) => (
-                      <option value={option} key={index} className="">
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                  <AddDetailForm
-                    detail={item.label}
-                    locations={locations.map((loc) => loc.location)}
-                    stakes={stakes.map((stk) => stk.stake)}
-                    game_types={game_types.map((type) => type.game_type)}
-                    user_id={userId}
-                    isCash={isCash}
                   />
-                </div>
-              ) : (
-                <input
-                  type="number"
-                  name={item.name}
-                  value={formData[item.name]}
-                  onChange={handleChange}
-                  placeholder={item.placeholder}
-                  className="border border-black rounded-md px-3 py-2 truncate w-[270px]"
-                  required
-                />
+                ) : item.options ? (
+                  <div className="flex flex-row gap-4 justify-center items-center">
+                    <select
+                      name={item.name}
+                      value={formData[item.name]}
+                      onChange={handleChange}
+                      required
+                      className="border border-black rounded-md px-3 py-2 truncate w-[224px]"
+                    >
+                      <option value="" disabled hidden>
+                        {item.placeholder}
+                      </option>
+                      {item.options.map((option, index) => (
+                        <option value={option} key={index} className="">
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                    <AddDetailForm
+                      detail={item.label}
+                      locations={locations.map((loc) => loc.location)}
+                      stakes={stakes.map((stk) => stk.stake)}
+                      game_types={game_types.map((type) => type.game_type)}
+                      user_id={userId}
+                      isCash={isCash}
+                    />
+                  </div>
+                ) : (
+                  <input
+                    type="number"
+                    name={item.name}
+                    value={formData[item.name]}
+                    onChange={handleChange}
+                    placeholder={item.placeholder}
+                    className="border border-black rounded-md px-3 py-2 truncate w-[270px]"
+                    required
+                  />
+                )}
+              </div>
+              {errors[item.name] && (
+                <p className="text-red-500 text-sm mt-1 pl-2">
+                  {errors[item.name]}
+                </p>
               )}
             </div>
-            {errors[item.name] && (
-              <p className="text-red-500 text-sm mt-1 pl-2">
-                {errors[item.name]}
-              </p>
-            )}
           </div>
-        </div>
-      ))}
-      <InteractiveHoverButton className="w-[1/2]" type="submit">
-        {submitting
-          ? 'Submitting...'
-          : currentSession
-            ? 'Update Session'
-            : 'Add Session'}
-      </InteractiveHoverButton>
-    </form>
+        ))}
+        <InteractiveHoverButton className="w-[1/2]" type="submit">
+          {submitting
+            ? 'Submitting...'
+            : currentSession
+              ? 'Update Session'
+              : 'Add Session'}
+        </InteractiveHoverButton>
+      </form>
+    </div>
   )
 }
 

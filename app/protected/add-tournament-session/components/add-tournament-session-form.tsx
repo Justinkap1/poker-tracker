@@ -16,7 +16,7 @@ import AddDetailForm from '../../../../components/shared/add-detail-form'
 import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
 import { useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
-import { encodedRedirect } from '@/utils/utils'
+import { redirect } from 'next/navigation'
 
 const TournamentForm: React.FC<TournamentFormProps> = ({
   userId,
@@ -116,6 +116,7 @@ const TournamentForm: React.FC<TournamentFormProps> = ({
         setSubmitting(false)
       }
       setSuccessMessage('Your session has been recorded')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (error) {
       console.error('Error:', error)
       alert('Something went wrong.')
@@ -149,11 +150,7 @@ const TournamentForm: React.FC<TournamentFormProps> = ({
     }
 
     if (updated) {
-      encodedRedirect(
-        'success',
-        '/protected/view-sessions',
-        `Your session has been updated successfully!`
-      )
+      redirect('/protected/view-sessions')
     }
   }
 

@@ -1,16 +1,11 @@
 import { getUserCashSessions, getUserTournamentSessions } from '@/api/api'
-import { FormMessage, Message } from '@/components/shared/form-message'
-import { Button } from '@/components/ui/button'
 import { Session, TournamentSession } from '@/lib/interfaces'
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import SessionTable from './components/session-table'
 
-export default async function EditSession(props: {
-  searchParams: Promise<Message>
-}) {
-  const searchParams = await props.searchParams
+export default async function EditSession() {
   const supabase = await createClient()
 
   const {
@@ -37,12 +32,24 @@ export default async function EditSession(props: {
   }
 
   return (
-    <div className="flex flex-col gap-4 w-full h-full py-8 px-20 justify-center items-center">
-      <FormMessage message={searchParams} />
+    <div className="flex flex-col gap-4 w-full h-full py-12 px-20 justify-start items-center">
       <SessionTable
         cashSessions={userCashSessions}
         tournamentSessions={userTournamentSessions}
       />
+      <div className="flex flex-row gap-1 text-gray-600 text-sm items-center justify-center">
+        <span>Need to input another session? Add a</span>
+        <Link href="/protected/add-cash-session" className="hover:text-white">
+          cash session
+        </Link>
+        <span>or a</span>
+        <Link
+          href="/protected/add-tournament-session"
+          className="hover:text-white"
+        >
+          tournament session
+        </Link>
+      </div>
     </div>
   )
 }

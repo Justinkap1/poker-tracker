@@ -169,8 +169,16 @@ const AddDetailForm: React.FC<AddDetailFormProps> = ({
           </AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogDescription>
-          Click the + to add a {detail.toLowerCase()} and the - to delete it.
-          Make sure to save your changes or click cancel to revert them.
+          <span>
+            Click the + to add a {detail.toLowerCase()} and the - to delete it.
+            Make sure to save your changes or click cancel to revert them.
+            Adding or subtracting locations will be specific to either cash or
+            tournaments. Right now you are editing your
+          </span>{' '}
+          <span className="text-black font-bold">
+            {isCash ? 'cash' : 'tournament'}
+          </span>
+          <span> details</span>
         </AlertDialogDescription>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">

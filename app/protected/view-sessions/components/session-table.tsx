@@ -39,8 +39,8 @@ export default function SessionTable({
 
   const sortedTournamentSessions = [...tournamentSessions].sort((a, b) => {
     const now = Date.now()
-    const diffA = Math.abs(new Date(a.start_time).getTime() - now)
-    const diffB = Math.abs(new Date(b.start_time).getTime() - now)
+    const diffA = Math.abs(new Date(a.start_time).getDate() - now)
+    const diffB = Math.abs(new Date(b.start_time).getDate() - now)
     return diffA - diffB
   })
 

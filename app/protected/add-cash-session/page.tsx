@@ -77,9 +77,6 @@ export default async function AddCashSession(props: {
         currentSession={userSession[0]}
         isCash={isCash}
       />
-      {!('cash_session' in searchParams) && (
-        <FormMessage message={searchParams} />
-      )}
     </div>
   )
 }
