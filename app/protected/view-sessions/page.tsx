@@ -5,7 +5,14 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import SessionTable from './components/session-table'
 
-export default async function EditSession() {
+export default async function ViewSessions({
+  searchParams,
+}: {
+  searchParams: { sortCashBy?: string; order?: string }
+}) {
+  const resolvedParams = await Promise.resolve(searchParams)
+  const sortCashBy = resolvedParams.sortCashBy
+  const order = resolvedParams.order === 'ascending' ? true : false
   const supabase = await createClient()
 
   const {
@@ -20,7 +27,7 @@ export default async function EditSession() {
   let userTournamentSessions: TournamentSession[] = []
 
   try {
-    userCashSessions = await getUserCashSessions(user.id)
+    userCashSessions = await getUserCashSessions(user.id, sortCashBy, order)
   } catch (err) {
     console.error('error fetching user cash sessions:', err)
   }
@@ -39,13 +46,16 @@ export default async function EditSession() {
       />
       <div className="flex flex-row gap-1 text-gray-600 text-sm items-center justify-center">
         <span>Need to input another session? Add a</span>
-        <Link href="/protected/add-cash-session" className="hover:text-white">
+        <Link
+          href="/protected/add-cash-session"
+          className="hover:text-black hover:font-bold"
+        >
           cash session
         </Link>
         <span>or a</span>
         <Link
           href="/protected/add-tournament-session"
-          className="hover:text-white"
+          className="hover:text-black hover:font-bold"
         >
           tournament session
         </Link>

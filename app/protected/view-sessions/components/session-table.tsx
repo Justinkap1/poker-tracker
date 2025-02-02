@@ -12,13 +12,18 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Pencil, PencilRuler } from 'lucide-react'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import CashSortBy from './sort-by-form'
 
 export default function SessionTable({
   cashSessions,
   tournamentSessions,
+  sortBy,
 }: {
   cashSessions: Session[]
   tournamentSessions: TournamentSession[]
+  sortBy?: string
 }) {
   const formatDate = (date: string) => {
     const date_ = new Date(date)
@@ -30,20 +35,6 @@ export default function SessionTable({
     return `${date_.getHours() % 12 === 0 ? (date_.getHours() % 12) + 1 : date_.getHours() % 12}:${date_.getMinutes() < 10 ? '0' + date_.getMinutes() : date_.getMinutes()}${date_.getHours() > 12 ? 'PM' : 'AM'}`
   }
 
-  const sortedCashSessions = [...cashSessions].sort((a, b) => {
-    const now = Date.now()
-    const diffA = Math.abs(new Date(a.start_time).getTime() - now)
-    const diffB = Math.abs(new Date(b.start_time).getTime() - now)
-    return diffA - diffB
-  })
-
-  const sortedTournamentSessions = [...tournamentSessions].sort((a, b) => {
-    const now = Date.now()
-    const diffA = Math.abs(new Date(a.start_time).getDate() - now)
-    const diffB = Math.abs(new Date(b.start_time).getDate() - now)
-    return diffA - diffB
-  })
-
   return (
     <div className="flex flex-col items-center gap-2 bg-white p-8 drop-shadow-lg rounded-md">
       <div className="text-5xl font-bold text-center">View Sessions</div>
@@ -53,142 +44,173 @@ export default function SessionTable({
           <TabsTrigger value="tournament">Tournaments</TabsTrigger>
         </TabsList>
         <TabsContent value="cash">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Game Type</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Stakes</TableHead>
-                <TableHead>Buy in</TableHead>
-                <TableHead>Cash out</TableHead>
-                <TableHead>Net result</TableHead>
-                <TableHead>Start Time</TableHead>
-                <TableHead>End Time</TableHead>
-                <TableHead>Time Played</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sortedCashSessions.map((session, index) => (
-                <TableRow key={index}>
-                  <TableCell>{session.game_type}</TableCell>
-                  <TableCell>{session.location}</TableCell>
-                  <TableCell>{session.stake}</TableCell>
-                  <TableCell>${session.buyin}</TableCell>
-                  <TableCell>${session.cashout}</TableCell>
-                  {session.net_result !== null &&
-                    session.net_result !== undefined && (
-                      <TableCell
-                        className={
-                          session.net_result > 0
-                            ? 'text-green-500'
-                            : session.net_result < 0
-                              ? 'text-destructive'
-                              : 'text-black'
-                        }
-                      >
-                        {session.net_result > 0
-                          ? '+'
-                          : session.net_result < 0
-                            ? '-'
-                            : ''}
-                        ${Math.abs(session.net_result)}
+          <div className="flex flex-col gap-6">
+            <CashSortBy />
+            <ScrollArea className="h-[350px] w-full rounded-md px-6">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Game Type</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Stakes</TableHead>
+                    <TableHead>Buy in</TableHead>
+                    <TableHead>Cash out</TableHead>
+                    <TableHead>Net result</TableHead>
+                    <TableHead>Start Time</TableHead>
+                    <TableHead>End Time</TableHead>
+                    <TableHead>Time Played</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {cashSessions.map((session, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="max-w-[120px] truncate">
+                        {session.game_type}
                       </TableCell>
-                    )}
-                  <TableCell>
-                    <div className="flex flex-col justify-center">
-                      <span>{formatDate(session.start_time)}</span>
-                      <span>{formatTime(session.start_time)}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-col justify-center">
-                      <span>{formatDate(session.end_time)}</span>
-                      <span>{formatTime(session.end_time)}</span>
-                    </div>
-                  </TableCell>
-                  {session.time_played && (
-                    <TableCell>
-                      {Math.round(session.time_played * 100) / 100} Hours
-                    </TableCell>
-                  )}
-                  {session.id && (
-                    <TableCell>
-                      <Link
-                        href={`/protected/add-cash-session?cash_session=${session.id}`}
-                      >
-                        <Button>Edit Session</Button>
-                      </Link>
-                    </TableCell>
-                  )}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                      <TableCell className="max-w-[120px] truncate">
+                        {session.location}
+                      </TableCell>
+                      <TableCell className="max-w-[120px] truncate">
+                        {session.stake}
+                      </TableCell>
+                      <TableCell className="max-w-[120px] truncate">
+                        ${session.buyin}
+                      </TableCell>
+                      <TableCell className="max-w-[120px] truncate">
+                        ${session.cashout}
+                      </TableCell>
+                      {session.net_result !== null &&
+                        session.net_result !== undefined && (
+                          <TableCell
+                            className={
+                              session.net_result > 0
+                                ? 'text-green-500'
+                                : session.net_result < 0
+                                  ? 'text-destructive'
+                                  : 'text-black'
+                            }
+                          >
+                            {session.net_result > 0
+                              ? '+'
+                              : session.net_result < 0
+                                ? '-'
+                                : ''}
+                            ${Math.abs(session.net_result)}
+                          </TableCell>
+                        )}
+                      <TableCell className="max-w-[120px] truncate">
+                        <div className="flex flex-col justify-center">
+                          <span>{formatDate(session.start_time)}</span>
+                          <span>{formatTime(session.start_time)}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="max-w-[120px] truncate">
+                        <div className="flex flex-col justify-center">
+                          <span>{formatDate(session.end_time)}</span>
+                          <span>{formatTime(session.end_time)}</span>
+                        </div>
+                      </TableCell>
+                      {session.time_played && (
+                        <TableCell className="max-w-[120px] truncate">
+                          {Math.round(session.time_played * 100) / 100} Hours
+                        </TableCell>
+                      )}
+                      {session.id && (
+                        <TableCell className="max-w-[120px] truncate">
+                          <Link
+                            href={`/protected/add-cash-session?cash_session=${session.id}`}
+                          >
+                            <Button>
+                              <PencilRuler />
+                            </Button>
+                          </Link>
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </ScrollArea>
+          </div>
         </TabsContent>
         <TabsContent value="tournament">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Game Type</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Buy in</TableHead>
-                <TableHead>Cash out</TableHead>
-                <TableHead>Net Result</TableHead>
-                <TableHead>Placement</TableHead>
-                <TableHead>Start Date</TableHead>
-                <TableHead>End Date</TableHead>
-                <TableHead>Days Played</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sortedTournamentSessions.map((session, index) => (
-                <TableRow key={index}>
-                  <TableCell>{session.game_type}</TableCell>
-                  <TableCell>{session.location}</TableCell>
-                  <TableCell>${session.buyin}</TableCell>
-                  <TableCell>${session.cashout}</TableCell>
-                  {session.net_result !== null &&
-                    session.net_result !== undefined && (
-                      <TableCell
-                        className={
-                          session.net_result > 0
-                            ? 'text-green-500'
+          <ScrollArea className="h-[350px] w-full rounded-md px-6">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Game Type</TableHead>
+                  <TableHead>Location</TableHead>
+                  <TableHead>Buy in</TableHead>
+                  <TableHead>Cash out</TableHead>
+                  <TableHead>Net Result</TableHead>
+                  <TableHead>Placement</TableHead>
+                  <TableHead>Start Date</TableHead>
+                  <TableHead>End Date</TableHead>
+                  <TableHead>Days Played</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {tournamentSessions.map((session, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="max-w-[120px] truncate">
+                      {session.game_type}
+                    </TableCell>
+                    <TableCell className="max-w-[120px] truncate">
+                      {session.location}
+                    </TableCell>
+                    <TableCell className="max-w-[120px] truncate">
+                      ${session.buyin}
+                    </TableCell>
+                    <TableCell className="max-w-[120px] truncate">
+                      ${session.cashout}
+                    </TableCell>
+                    {session.net_result !== null &&
+                      session.net_result !== undefined && (
+                        <TableCell
+                          className={
+                            session.net_result > 0
+                              ? 'text-green-500'
+                              : session.net_result < 0
+                                ? 'text-destructive'
+                                : 'text-black'
+                          }
+                        >
+                          {session.net_result > 0
+                            ? '+'
                             : session.net_result < 0
-                              ? 'text-destructive'
-                              : 'text-black'
-                        }
-                      >
-                        {session.net_result > 0
-                          ? '+'
-                          : session.net_result < 0
-                            ? '-'
-                            : ''}
-                        ${Math.abs(session.net_result)}
+                              ? '-'
+                              : ''}
+                          ${Math.abs(session.net_result)}
+                        </TableCell>
+                      )}
+                    <TableCell className="max-w-[120px] truncate">
+                      <span>{session.placement}</span>
+                    </TableCell>
+                    <TableCell className="max-w-[120px] truncate">
+                      <span>{formatDate(session.start_time)}</span>
+                    </TableCell>
+                    <TableCell className="max-w-[120px] truncate">
+                      <span>{formatDate(session.end_time)}</span>
+                    </TableCell>
+                    <TableCell className="max-w-[120px] truncate">
+                      {session.days}
+                    </TableCell>
+                    {session.id && (
+                      <TableCell className="max-w-[120px] truncate">
+                        <Link
+                          href={`/protected/add-tournament-session?tournament_session=${session.id}`}
+                        >
+                          <Button>
+                            <PencilRuler />
+                          </Button>
+                        </Link>
                       </TableCell>
                     )}
-                  <TableCell>
-                    <span>{session.placement}</span>
-                  </TableCell>
-                  <TableCell>
-                    <span>{formatDate(session.start_time)}</span>
-                  </TableCell>
-                  <TableCell>
-                    <span>{formatDate(session.end_time)}</span>
-                  </TableCell>
-                  <TableCell>{session.days}</TableCell>
-                  {session.id && (
-                    <TableCell>
-                      <Link
-                        href={`/protected/add-tournament-session?tournament_session=${session.id}`}
-                      >
-                        <Button>Edit Session</Button>
-                      </Link>
-                    </TableCell>
-                  )}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </ScrollArea>
         </TabsContent>
       </Tabs>
     </div>

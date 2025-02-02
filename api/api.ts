@@ -77,7 +77,9 @@ export const getUserGameTypes = async (
 }
 
 export const getUserCashSessions = async (
-  userId: string
+  userId: string,
+  sortBy: string = 'start_time',
+  ascending: boolean = false
 ): Promise<Session[]> => {
   const supabase = await createClient()
   try {
@@ -87,6 +89,7 @@ export const getUserCashSessions = async (
         'game_type, stake, location, time_played, start_time, end_time, buyin, cashout, net_result, id'
       )
       .eq('user_id', userId)
+      .order(sortBy, { ascending })
     if (error) {
       console.error('Error fetching sessions:', error.message)
     } else {

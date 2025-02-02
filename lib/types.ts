@@ -51,3 +51,23 @@ export const addTournamentFormSchema = addSessionFormSchema
   )
 
 export type addTournamentForm = z.infer<typeof addTournamentFormSchema>
+
+export const cashSortFormSchema = z.object({
+  game_type: z.boolean().optional(),
+  location: z.boolean().optional(),
+  stake: z.boolean().optional(),
+  buyin: z.boolean().optional(),
+  cashout: z.boolean().optional(),
+  net_result: z.boolean().optional(),
+  start_time: z.boolean().optional(),
+  end_time: z.boolean().optional(),
+  time_played: z.boolean().optional(),
+})
+
+export type cashSessionForm = z.infer<typeof cashSortFormSchema>
+
+export const ascendingFormSchema = z.object({
+  ascending: z.string(),
+})
+
+export type ascendingForm = z.infer<typeof ascendingFormSchema>
