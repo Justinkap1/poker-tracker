@@ -8,10 +8,15 @@ import SessionTable from './components/session-table'
 export default async function ViewSessions({
   searchParams,
 }: {
-  searchParams: { sortCashBy?: string; order?: string }
+  searchParams: {
+    sortCashBy?: string
+    order?: string
+    sortTournamentBy?: string
+  }
 }) {
   const resolvedParams = await Promise.resolve(searchParams)
   const sortCashBy = resolvedParams.sortCashBy
+  const sortTournamentBy = resolvedParams.sortTournamentBy
   const order = resolvedParams.order === 'ascending' ? true : false
   const supabase = await createClient()
 
@@ -33,7 +38,11 @@ export default async function ViewSessions({
   }
 
   try {
-    userTournamentSessions = await getUserTournamentSessions(user.id)
+    userTournamentSessions = await getUserTournamentSessions(
+      user.id,
+      sortTournamentBy,
+      order
+    )
   } catch (err) {
     console.error('error fetching user tournament sessions')
   }

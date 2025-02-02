@@ -64,7 +64,21 @@ export const cashSortFormSchema = z.object({
   time_played: z.boolean().optional(),
 })
 
-export type cashSessionForm = z.infer<typeof cashSortFormSchema>
+export type cashSortForm = z.infer<typeof cashSortFormSchema>
+
+export const tournamentSortFormSchema = z.object({
+  game_type: z.boolean().optional(),
+  location: z.boolean().optional(),
+  placement: z.boolean().optional(),
+  buyin: z.boolean().optional(),
+  cashout: z.boolean().optional(),
+  net_result: z.boolean().optional(),
+  start_time: z.boolean().optional(),
+  end_time: z.boolean().optional(),
+  days: z.boolean().optional(),
+})
+
+export type tournamentSortForm = z.infer<typeof tournamentSortFormSchema>
 
 export const ascendingFormSchema = z.object({
   ascending: z.string(),

@@ -12,7 +12,7 @@ import {
 import {
   ascendingForm,
   ascendingFormSchema,
-  cashSessionForm,
+  cashSortForm,
   cashSortFormSchema,
 } from '@/lib/types'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -23,7 +23,7 @@ export default function CashSortBy() {
   const searchParams = useSearchParams().get('sortCashBy')
   const router = useRouter()
   const formItems: Array<{
-    name: keyof cashSessionForm
+    name: keyof cashSortForm
     label: string
   }> = [
     {
@@ -63,7 +63,7 @@ export default function CashSortBy() {
       label: 'Time Played',
     },
   ]
-  const checkBoxForm = useForm<cashSessionForm>({
+  const checkBoxForm = useForm<cashSortForm>({
     resolver: zodResolver(cashSortFormSchema),
     defaultValues: {
       game_type: searchParams === 'game_type' ? true : false,

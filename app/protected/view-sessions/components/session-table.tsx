@@ -14,7 +14,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Pencil, PencilRuler } from 'lucide-react'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import CashSortBy from './sort-by-form'
+import CashSortBy from './cash-sort-by-form'
+import TournamentSortBy from './tournament-sort-by-form'
 
 export default function SessionTable({
   cashSessions,
@@ -134,83 +135,86 @@ export default function SessionTable({
           </div>
         </TabsContent>
         <TabsContent value="tournament">
-          <ScrollArea className="h-[350px] w-full rounded-md px-6">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Game Type</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead>Buy in</TableHead>
-                  <TableHead>Cash out</TableHead>
-                  <TableHead>Net Result</TableHead>
-                  <TableHead>Placement</TableHead>
-                  <TableHead>Start Date</TableHead>
-                  <TableHead>End Date</TableHead>
-                  <TableHead>Days Played</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {tournamentSessions.map((session, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="max-w-[120px] truncate">
-                      {session.game_type}
-                    </TableCell>
-                    <TableCell className="max-w-[120px] truncate">
-                      {session.location}
-                    </TableCell>
-                    <TableCell className="max-w-[120px] truncate">
-                      ${session.buyin}
-                    </TableCell>
-                    <TableCell className="max-w-[120px] truncate">
-                      ${session.cashout}
-                    </TableCell>
-                    {session.net_result !== null &&
-                      session.net_result !== undefined && (
-                        <TableCell
-                          className={
-                            session.net_result > 0
-                              ? 'text-green-500'
+          <div className="flex flex-col gap-6">
+            <TournamentSortBy />
+            <ScrollArea className="h-[350px] w-full rounded-md px-6">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Game Type</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Buy in</TableHead>
+                    <TableHead>Cash out</TableHead>
+                    <TableHead>Net Result</TableHead>
+                    <TableHead>Placement</TableHead>
+                    <TableHead>Start Date</TableHead>
+                    <TableHead>End Date</TableHead>
+                    <TableHead>Days Played</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {tournamentSessions.map((session, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="max-w-[120px] truncate">
+                        {session.game_type}
+                      </TableCell>
+                      <TableCell className="max-w-[120px] truncate">
+                        {session.location}
+                      </TableCell>
+                      <TableCell className="max-w-[120px] truncate">
+                        ${session.buyin}
+                      </TableCell>
+                      <TableCell className="max-w-[120px] truncate">
+                        ${session.cashout}
+                      </TableCell>
+                      {session.net_result !== null &&
+                        session.net_result !== undefined && (
+                          <TableCell
+                            className={
+                              session.net_result > 0
+                                ? 'text-green-500'
+                                : session.net_result < 0
+                                  ? 'text-destructive'
+                                  : 'text-black'
+                            }
+                          >
+                            {session.net_result > 0
+                              ? '+'
                               : session.net_result < 0
-                                ? 'text-destructive'
-                                : 'text-black'
-                          }
-                        >
-                          {session.net_result > 0
-                            ? '+'
-                            : session.net_result < 0
-                              ? '-'
-                              : ''}
-                          ${Math.abs(session.net_result)}
+                                ? '-'
+                                : ''}
+                            ${Math.abs(session.net_result)}
+                          </TableCell>
+                        )}
+                      <TableCell className="max-w-[120px] truncate">
+                        <span>{session.placement}</span>
+                      </TableCell>
+                      <TableCell className="max-w-[120px] truncate">
+                        <span>{formatDate(session.start_time)}</span>
+                      </TableCell>
+                      <TableCell className="max-w-[120px] truncate">
+                        <span>{formatDate(session.end_time)}</span>
+                      </TableCell>
+                      <TableCell className="max-w-[120px] truncate">
+                        {session.days}
+                      </TableCell>
+                      {session.id && (
+                        <TableCell className="max-w-[120px] truncate">
+                          <Link
+                            href={`/protected/add-tournament-session?tournament_session=${session.id}`}
+                          >
+                            <Button>
+                              <PencilRuler />
+                            </Button>
+                          </Link>
                         </TableCell>
                       )}
-                    <TableCell className="max-w-[120px] truncate">
-                      <span>{session.placement}</span>
-                    </TableCell>
-                    <TableCell className="max-w-[120px] truncate">
-                      <span>{formatDate(session.start_time)}</span>
-                    </TableCell>
-                    <TableCell className="max-w-[120px] truncate">
-                      <span>{formatDate(session.end_time)}</span>
-                    </TableCell>
-                    <TableCell className="max-w-[120px] truncate">
-                      {session.days}
-                    </TableCell>
-                    {session.id && (
-                      <TableCell className="max-w-[120px] truncate">
-                        <Link
-                          href={`/protected/add-tournament-session?tournament_session=${session.id}`}
-                        >
-                          <Button>
-                            <PencilRuler />
-                          </Button>
-                        </Link>
-                      </TableCell>
-                    )}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </ScrollArea>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </ScrollArea>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
