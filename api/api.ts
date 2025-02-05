@@ -83,25 +83,24 @@ export const getUserCashSessions = async (
   sortBy: string = 'start_time',
   ascending: boolean = false
 ): Promise<Session[]> => {
-  const supabase = await createClient()
-  try {
-    const { data, error } = await supabase
-      .from('sessions')
-      .select(
-        'game_type, stake, location, time_played, start_time, end_time, buyin, cashout, net_result, id'
-      )
-      .eq('user_id', userId)
-      .order(sortBy, { ascending })
-    if (error) {
-      console.error('Error fetching sessions:', error.message)
-    } else {
-      return data
-    }
-  } catch (err) {
-    console.error('Unexpected error:', err)
+  const supabase = createClient()
+  let query = supabase
+    .from('sessions')
+    .select(
+      'game_type, stake, location, time_played, start_time, end_time, buyin, cashout, net_result, id'
+    )
+    .eq('user_id', userId)
+    .order(sortBy, { ascending })
+
+
+  const { data: sessionData, error: sessionError } = await query
+  if (sessionError) {
+    console.error('Error fetching session data:', sessionError)
     return []
   }
-  return []
+  console.log(sessionData)
+
+  return sessionData
 }
 
 export const getUserTournamentSessions = async (

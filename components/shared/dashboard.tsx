@@ -78,7 +78,7 @@ const Dashboard: React.FC<DashboardProps> = ({
     selectedTime,
   ])
 
-  console.log(playerCashData)
+  //console.log(playerCashData)
 
   return (
     <div className="flex flex-col gap-4">
@@ -110,15 +110,15 @@ const Dashboard: React.FC<DashboardProps> = ({
               <option value="All Locations">All Locations</option>
               {selectedMode === 'Cash'
                 ? cashLocations.map((location, index) => (
-                    <option value={location.location} key={index}>
-                      {location.location}
-                    </option>
-                  ))
+                  <option value={location.location} key={index}>
+                    {location.location}
+                  </option>
+                ))
                 : tournamentLocations.map((location, index) => (
-                    <option value={location.location} key={index}>
-                      {location.location}
-                    </option>
-                  ))}
+                  <option value={location.location} key={index}>
+                    {location.location}
+                  </option>
+                ))}
             </select>
             {selectedMode === 'Cash' && (
               <select
@@ -153,15 +153,15 @@ const Dashboard: React.FC<DashboardProps> = ({
               <option value="All Time">All Game Types</option>
               {selectedMode === 'Cash'
                 ? cashGameTypes.map((game_type, index) => (
-                    <option value={game_type.game_type} key={index}>
-                      {game_type.game_type}
-                    </option>
-                  ))
+                  <option value={game_type.game_type} key={index}>
+                    {game_type.game_type}
+                  </option>
+                ))
                 : tournamentGameTypes.map((game_type, index) => (
-                    <option value={game_type.game_type} key={index}>
-                      {game_type.game_type}
-                    </option>
-                  ))}
+                  <option value={game_type.game_type} key={index}>
+                    {game_type.game_type}
+                  </option>
+                ))}
             </select>
             <select
               className="px-3 block w-full py-2 text-[#273B59] text-[14px] font-medium bg-[#F8F9FF] border border-[#A3A3A3] rounded-md shadow-sm focus:outline-none hover:cursor-pointer"
