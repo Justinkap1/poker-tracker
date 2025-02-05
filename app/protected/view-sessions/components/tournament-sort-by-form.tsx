@@ -80,7 +80,7 @@ export default function TournamentSortBy() {
   const ascendingForm = useForm<ascendingForm>({
     resolver: zodResolver(ascendingFormSchema),
     defaultValues: {
-      ascending: 'Ascending',
+      ascending: 'ascending',
     },
   })
   const onSubmit = () => {

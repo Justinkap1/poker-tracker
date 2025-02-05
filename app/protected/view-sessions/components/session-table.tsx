@@ -11,11 +11,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Pencil, PencilRuler } from 'lucide-react'
+import { PencilRuler } from 'lucide-react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import CashSortBy from './cash-sort-by-form'
 import TournamentSortBy from './tournament-sort-by-form'
+import { useEffect, useState } from 'react'
 
 export default function SessionTable({
   cashSessions,
@@ -24,6 +26,7 @@ export default function SessionTable({
   cashSessions: Session[]
   tournamentSessions: TournamentSession[]
 }) {
+  const [loading, setLoading] = useState<boolean>(false)
   const formatDate = (date: string) => {
     const date_ = new Date(date)
     return `${date_.getMonth() + 1}/${date_.getDate()}/${date_.getFullYear() % 100}`
@@ -33,6 +36,12 @@ export default function SessionTable({
     const date_ = new Date(date)
     return `${date_.getHours() % 12 === 0 ? (date_.getHours() % 12) + 1 : date_.getHours() % 12}:${date_.getMinutes() < 10 ? '0' + date_.getMinutes() : date_.getMinutes()}${date_.getHours() > 12 ? 'PM' : 'AM'}`
   }
+
+  useEffect(() => {
+    setLoading(true)
+    const timer = setTimeout(() => setLoading(false), 500)
+    return () => clearTimeout(timer)
+  }, [cashSessions, tournamentSessions])
 
   return (
     <div className="flex flex-col items-center gap-2 bg-white p-8 drop-shadow-lg rounded-md">
@@ -60,74 +69,110 @@ export default function SessionTable({
                     <TableHead>Time Played</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
-                  {cashSessions.map((session, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="max-w-[120px] truncate">
-                        {session.game_type}
-                      </TableCell>
-                      <TableCell className="max-w-[120px] truncate">
-                        {session.location}
-                      </TableCell>
-                      <TableCell className="max-w-[120px] truncate">
-                        {session.stake}
-                      </TableCell>
-                      <TableCell className="max-w-[120px] truncate">
-                        ${session.buyin}
-                      </TableCell>
-                      <TableCell className="max-w-[120px] truncate">
-                        ${session.cashout}
-                      </TableCell>
-                      {session.net_result !== null &&
-                        session.net_result !== undefined && (
-                          <TableCell
-                            className={
-                              session.net_result > 0
-                                ? 'text-green-500'
+                {loading ? (
+                  <TableBody>
+                    {Array.from({ length: 6 }).map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                ) : (
+                  <TableBody>
+                    {cashSessions.map((session, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="max-w-[120px] truncate">
+                          {session.game_type}
+                        </TableCell>
+                        <TableCell className="max-w-[120px] truncate">
+                          {session.location}
+                        </TableCell>
+                        <TableCell className="max-w-[120px] truncate">
+                          {session.stake}
+                        </TableCell>
+                        <TableCell className="max-w-[120px] truncate">
+                          ${session.buyin}
+                        </TableCell>
+                        <TableCell className="max-w-[120px] truncate">
+                          ${session.cashout}
+                        </TableCell>
+                        {session.net_result !== null &&
+                          session.net_result !== undefined && (
+                            <TableCell
+                              className={
+                                session.net_result > 0
+                                  ? 'text-green-500'
+                                  : session.net_result < 0
+                                    ? 'text-destructive'
+                                    : 'text-black'
+                              }
+                            >
+                              {session.net_result > 0
+                                ? '+'
                                 : session.net_result < 0
-                                  ? 'text-destructive'
-                                  : 'text-black'
-                            }
-                          >
-                            {session.net_result > 0
-                              ? '+'
-                              : session.net_result < 0
-                                ? '-'
-                                : ''}
-                            ${Math.abs(session.net_result)}
+                                  ? '-'
+                                  : ''}
+                              ${Math.abs(session.net_result)}
+                            </TableCell>
+                          )}
+                        <TableCell className="max-w-[120px] truncate">
+                          <div className="flex flex-col justify-center">
+                            <span>{formatDate(session.start_time)}</span>
+                            <span>{formatTime(session.start_time)}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-[120px] truncate">
+                          <div className="flex flex-col justify-center">
+                            <span>{formatDate(session.end_time)}</span>
+                            <span>{formatTime(session.end_time)}</span>
+                          </div>
+                        </TableCell>
+                        {session.time_played && (
+                          <TableCell className="max-w-[120px] truncate">
+                            {Math.round(session.time_played * 100) / 100} Hours
                           </TableCell>
                         )}
-                      <TableCell className="max-w-[120px] truncate">
-                        <div className="flex flex-col justify-center">
-                          <span>{formatDate(session.start_time)}</span>
-                          <span>{formatTime(session.start_time)}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="max-w-[120px] truncate">
-                        <div className="flex flex-col justify-center">
-                          <span>{formatDate(session.end_time)}</span>
-                          <span>{formatTime(session.end_time)}</span>
-                        </div>
-                      </TableCell>
-                      {session.time_played && (
-                        <TableCell className="max-w-[120px] truncate">
-                          {Math.round(session.time_played * 100) / 100} Hours
-                        </TableCell>
-                      )}
-                      {session.id && (
-                        <TableCell className="max-w-[120px] truncate">
-                          <Link
-                            href={`/protected/add-cash-session?cash_session=${session.id}`}
-                          >
-                            <Button>
-                              <PencilRuler />
-                            </Button>
-                          </Link>
-                        </TableCell>
-                      )}
-                    </TableRow>
-                  ))}
-                </TableBody>
+                        {session.id && (
+                          <TableCell className="max-w-[120px] truncate">
+                            <Link
+                              href={`/protected/add-cash-session?cash_session=${session.id}`}
+                            >
+                              <Button>
+                                <PencilRuler />
+                              </Button>
+                            </Link>
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                )}
               </Table>
             </ScrollArea>
           </div>
@@ -150,66 +195,99 @@ export default function SessionTable({
                     <TableHead>Days Played</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
-                  {tournamentSessions.map((session, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="max-w-[120px] truncate">
-                        {session.game_type}
-                      </TableCell>
-                      <TableCell className="max-w-[120px] truncate">
-                        {session.location}
-                      </TableCell>
-                      <TableCell className="max-w-[120px] truncate">
-                        ${session.buyin}
-                      </TableCell>
-                      <TableCell className="max-w-[120px] truncate">
-                        ${session.cashout}
-                      </TableCell>
-                      {session.net_result !== null &&
-                        session.net_result !== undefined && (
-                          <TableCell
-                            className={
-                              session.net_result > 0
-                                ? 'text-green-500'
+                {loading ? (
+                  <TableBody>
+                    {Array.from({ length: 6 }).map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="w-20 h-8" />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                ) : (
+                  <TableBody>
+                    {tournamentSessions.map((session, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="max-w-[120px] truncate">
+                          {session.game_type}
+                        </TableCell>
+                        <TableCell className="max-w-[120px] truncate">
+                          {session.location}
+                        </TableCell>
+                        <TableCell className="max-w-[120px] truncate">
+                          ${session.buyin}
+                        </TableCell>
+                        <TableCell className="max-w-[120px] truncate">
+                          ${session.cashout}
+                        </TableCell>
+                        {session.net_result !== null &&
+                          session.net_result !== undefined && (
+                            <TableCell
+                              className={
+                                session.net_result > 0
+                                  ? 'text-green-500'
+                                  : session.net_result < 0
+                                    ? 'text-destructive'
+                                    : 'text-black'
+                              }
+                            >
+                              {session.net_result > 0
+                                ? '+'
                                 : session.net_result < 0
-                                  ? 'text-destructive'
-                                  : 'text-black'
-                            }
-                          >
-                            {session.net_result > 0
-                              ? '+'
-                              : session.net_result < 0
-                                ? '-'
-                                : ''}
-                            ${Math.abs(session.net_result)}
+                                  ? '-'
+                                  : ''}
+                              ${Math.abs(session.net_result)}
+                            </TableCell>
+                          )}
+                        <TableCell className="max-w-[120px] truncate">
+                          <span>{session.placement}</span>
+                        </TableCell>
+                        <TableCell className="max-w-[120px] truncate">
+                          <span>{formatDate(session.start_time)}</span>
+                        </TableCell>
+                        <TableCell className="max-w-[120px] truncate">
+                          <span>{formatDate(session.end_time)}</span>
+                        </TableCell>
+                        <TableCell className="max-w-[120px] truncate">
+                          {session.days}
+                        </TableCell>
+                        {session.id && (
+                          <TableCell className="max-w-[120px] truncate">
+                            <Link
+                              href={`/protected/add-tournament-session?tournament_session=${session.id}`}
+                            >
+                              <Button>
+                                <PencilRuler />
+                              </Button>
+                            </Link>
                           </TableCell>
                         )}
-                      <TableCell className="max-w-[120px] truncate">
-                        <span>{session.placement}</span>
-                      </TableCell>
-                      <TableCell className="max-w-[120px] truncate">
-                        <span>{formatDate(session.start_time)}</span>
-                      </TableCell>
-                      <TableCell className="max-w-[120px] truncate">
-                        <span>{formatDate(session.end_time)}</span>
-                      </TableCell>
-                      <TableCell className="max-w-[120px] truncate">
-                        {session.days}
-                      </TableCell>
-                      {session.id && (
-                        <TableCell className="max-w-[120px] truncate">
-                          <Link
-                            href={`/protected/add-tournament-session?tournament_session=${session.id}`}
-                          >
-                            <Button>
-                              <PencilRuler />
-                            </Button>
-                          </Link>
-                        </TableCell>
-                      )}
-                    </TableRow>
-                  ))}
-                </TableBody>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                )}
               </Table>
             </ScrollArea>
           </div>
