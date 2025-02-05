@@ -1,5 +1,6 @@
 import { TimeFrame } from '@/common/enum'
 import { PlayerCashDataProps } from '@/components/shared/dashboard'
+import { Stakes, GameTypes, Location } from '@/lib/interfaces'
 import { createClient } from '@/utils/supabase/client'
 
 export const queryEditsHelper = async (
@@ -130,3 +131,72 @@ const getDefaultPlayerCashData = (): PlayerCashDataProps => ({
   freqStake: '',
   freqGameType: '',
 })
+
+export const getUserLocations = async (
+  userId: string,
+  isCash: boolean
+): Promise<Location[]> => {
+  const supabase = await createClient()
+  try {
+    const { data, error } = await supabase
+      .from('locations')
+      .select('location')
+      .eq('user_id', userId)
+      .eq('is_cash', isCash)
+    if (error) {
+      console.error('Error fetching locations:', error.message)
+      return []
+    } else {
+      return data
+    }
+  } catch (err) {
+    console.error('Unexpected error:', err)
+    return []
+  }
+}
+
+export const getUserStakes = async (
+  userId: string,
+  isCash: boolean
+): Promise<Stakes[]> => {
+  const supabase = await createClient()
+  try {
+    const { data, error } = await supabase
+      .from('stakes')
+      .select('stake')
+      .eq('user_id', userId)
+      .eq('is_cash', isCash)
+    if (error) {
+      console.error('Error fetching stakes:', error.message)
+      return []
+    } else {
+      return data
+    }
+  } catch (err) {
+    console.error('Unexpected error:', err)
+    return []
+  }
+}
+
+export const getUserGameTypes = async (
+  userId: string,
+  isCash: boolean
+): Promise<GameTypes[]> => {
+  const supabase = await createClient()
+  try {
+    const { data, error } = await supabase
+      .from('game_types')
+      .select('game_type')
+      .eq('user_id', userId)
+      .eq('is_cash', isCash)
+    if (error) {
+      console.error('Error fetching game types:', error.message)
+      return []
+    } else {
+      return data
+    }
+  } catch (err) {
+    console.error('Unexpected error:', err)
+    return []
+  }
+}
