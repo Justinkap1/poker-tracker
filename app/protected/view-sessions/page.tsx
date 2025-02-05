@@ -1,4 +1,7 @@
-import { getUserCashSessions, getUserTournamentSessions } from '@/api/api'
+import {
+  getUserCashSessions,
+  getUserTournamentSessions,
+} from '@/api/api_server'
 import { Session, TournamentSession } from '@/lib/interfaces'
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
@@ -46,6 +49,8 @@ export default async function ViewSessions({
   } catch (err) {
     console.error('error fetching user tournament sessions')
   }
+
+  //console.log(userCashSessions, userTournamentSessions)
 
   return (
     <div className="flex flex-col gap-4 w-full h-full py-12 px-20 justify-start items-center">

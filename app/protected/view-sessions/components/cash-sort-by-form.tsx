@@ -84,7 +84,7 @@ export default function CashSortBy() {
     },
   })
   const onSubmit = () => {
-    console.log(checkBoxForm.getValues(), ascendingForm.getValues())
+    //console.log(checkBoxForm.getValues(), ascendingForm.getValues())
     const selectedField = Object.entries(checkBoxForm.getValues()).find(
       ([key, value]) => value === true
     )
@@ -158,10 +158,10 @@ export default function CashSortBy() {
                 {...field}
               >
                 <option value="ascending" className="text-[10px]">
-                  Ascending
+                  Low to High
                 </option>
                 <option value="descending" className="text-[10px]">
-                  Descending
+                  High to Low
                 </option>
               </select>
             )}

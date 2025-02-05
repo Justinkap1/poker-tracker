@@ -1,6 +1,10 @@
 'use client'
 
-import { getUserGameTypes, getUserLocations, getUserStakes } from '@/api/api'
+import {
+  getUserGameTypes,
+  getUserLocations,
+  getUserStakes,
+} from '@/api/api_server'
 import Dashboard from '@/components/shared/dashboard'
 import { GameTypes, Location, Stakes } from '@/lib/interfaces'
 import { useEffect, useState } from 'react'

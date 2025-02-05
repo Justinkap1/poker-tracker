@@ -158,10 +158,10 @@ export default function TournamentSortBy() {
                 {...field}
               >
                 <option value="ascending" className="text-[10px]">
-                  Ascending
+                  Low to High
                 </option>
                 <option value="descending" className="text-[10px]">
-                  Descending
+                  High to Low
                 </option>
               </select>
             )}

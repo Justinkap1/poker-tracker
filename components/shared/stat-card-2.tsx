@@ -32,7 +32,7 @@ const StatCard2: React.FC<StatCardProps> = ({
         <Spade width={100} height={100} />
         <div className="flex flex-col justify-center gap-1 p-3 rounded-md bg-black text-white w-[50%]">
           {loading ? (
-            <Loader />
+            <Loader width={36} height={36} />
           ) : (
             <span
               className={`flex flex-row items-end text-3xl justify-between`}
@@ -42,7 +42,7 @@ const StatCard2: React.FC<StatCardProps> = ({
             </span>
           )}
           {loading ? (
-            <Loader />
+            <Loader width={36} height={36} />
           ) : (
             <span
               className={`flex flex-row items-end text-3xl justify-between`}

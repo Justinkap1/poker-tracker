@@ -38,7 +38,7 @@ export default function SessionTable({
     <div className="flex flex-col items-center gap-2 bg-white p-8 drop-shadow-lg rounded-md">
       <div className="text-5xl font-bold text-center">View Sessions</div>
       <Tabs defaultValue="cash">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-2 gap-2">
           <TabsTrigger value="cash">Cash</TabsTrigger>
           <TabsTrigger value="tournament">Tournaments</TabsTrigger>
         </TabsList>
