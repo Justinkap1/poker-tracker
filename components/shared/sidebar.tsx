@@ -25,7 +25,7 @@ export default function Sidebar() {
         <Button
           variant="sidebar"
           size="sidebar"
-          className={cn(pathName === '/protected' && 'bg-[#5494DA]')}
+          className={cn(pathName === '/protected' && 'bg-[#92D8EF]')}
         >
           <a href="/protected">
             <ChartBarIncreasing width={40} height={40} />
@@ -35,7 +35,7 @@ export default function Sidebar() {
           variant="sidebar"
           size="sidebar"
           className={cn(
-            pathName === '/protected/add-cash-session' && 'bg-[#5494DA]'
+            pathName === '/protected/add-cash-session' && 'bg-[#92D8EF]'
           )}
         >
           <a href="/protected/add-cash-session">
@@ -46,7 +46,7 @@ export default function Sidebar() {
           variant="sidebar"
           size="sidebar"
           className={cn(
-            pathName === '/protected/add-tournament-session' && 'bg-[#5494DA]'
+            pathName === '/protected/add-tournament-session' && 'bg-[#92D8EF]'
           )}
         >
           <a href="/protected/add-tournament-session">
@@ -57,7 +57,7 @@ export default function Sidebar() {
           variant="sidebar"
           size="sidebar"
           className={cn(
-            pathName === '/protected/view-sessions' && 'bg-[#5494DA]'
+            pathName === '/protected/view-sessions' && 'bg-[#92D8EF]'
           )}
         >
           <a href="/protected/view-sessions">

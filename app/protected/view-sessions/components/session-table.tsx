@@ -20,11 +20,9 @@ import TournamentSortBy from './tournament-sort-by-form'
 export default function SessionTable({
   cashSessions,
   tournamentSessions,
-  sortBy,
 }: {
   cashSessions: Session[]
   tournamentSessions: TournamentSession[]
-  sortBy?: string
 }) {
   const formatDate = (date: string) => {
     const date_ = new Date(date)
