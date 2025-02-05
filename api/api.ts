@@ -1,5 +1,8 @@
 import { TimeFrame } from '@/common/enum'
-import { PlayerCashDataProps } from '@/components/shared/dashboard'
+import {
+  PlayerCashDataProps,
+  PlayerTournamentDataProps,
+} from '@/components/shared/dashboard'
 import { Stakes, GameTypes, Location } from '@/lib/interfaces'
 import { createClient } from '@/utils/supabase/client'
 
@@ -49,6 +52,7 @@ export const queryEditsHelper = async (
 
   return query
 }
+
 export const fetchBasePlayerCashData = async (
   userId: string,
   selectedGameType?: string,
@@ -131,6 +135,77 @@ const getDefaultPlayerCashData = (): PlayerCashDataProps => ({
   freqStake: '',
   freqGameType: '',
 })
+
+const getDefaultPlayerTournamentData = (): PlayerTournamentDataProps => ({
+  totalProfit: 0,
+  avgPlacement: 0,
+  totalTime: 0,
+  freqLocation: '',
+  freqBuyin: 0,
+  numTournaments: 0,
+})
+
+export const fetchBasePlayerTournamentData = async (
+  userId: string,
+  selectedGameType?: string,
+  selectedStake?: string,
+  selectedLocation?: string,
+  selectedTime?: string
+): Promise<PlayerTournamentDataProps> => {
+  const supabase = createClient()
+
+  let query = supabase
+    .from('tournament_sessions')
+    .select(
+      `total_profit:net_result.sum(), total_time:days.sum(), session_count:id.count(), avg_placement:placement.avg()`
+    )
+    .eq('user_id', userId)
+
+  query = await queryEditsHelper(
+    query,
+    selectedStake,
+    selectedLocation,
+    selectedTime,
+    selectedGameType
+  )
+
+  const { data: sessionData, error: sessionError } = await query
+
+  if (sessionError) {
+    console.error('Error fetching session data:', sessionError)
+    return getDefaultPlayerTournamentData()
+  }
+
+  const { data: locationData, error: locationError } = await supabase
+    .from('tournament_sessions')
+    .select('location, count:location.count()')
+    .eq('user_id', userId)
+    .order('count', { ascending: false })
+    .limit(1)
+
+  const { data: buyinData, error: buyinError } = await supabase
+    .from('tournament_sessions')
+    .select('buyin, count:buyin.count()')
+    .eq('user_id', userId)
+    .order('count', { ascending: false })
+    .limit(1)
+
+  if (locationError || buyinError) {
+    console.error('Error fetching frequency data:', locationError, buyinError)
+    return getDefaultPlayerTournamentData()
+  }
+
+  const result = {
+    totalProfit: sessionData?.[0]?.total_profit || 0,
+    numTournaments: sessionData?.[0]?.session_count || 0,
+    totalTime: sessionData?.[0]?.total_time || 0,
+    avgPlacement: sessionData?.[0].avg_placement || 0,
+    freqLocation: locationData?.[0]?.location || '',
+    freqBuyin: buyinData?.[0]?.buyin || '',
+  }
+
+  return result
+}
 
 export const getUserLocations = async (
   userId: string,

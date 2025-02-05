@@ -1,6 +1,9 @@
 'use client'
 
-import { fetchBasePlayerCashData } from '@/api/api'
+import {
+  fetchBasePlayerCashData,
+  fetchBasePlayerTournamentData,
+} from '@/api/api'
 import { Stakes, Location, GameTypes } from '@/lib/interfaces'
 import { useEffect, useState } from 'react'
 import StatCard from './stat-card'
@@ -29,8 +32,10 @@ export type PlayerCashDataProps = {
 export type PlayerTournamentDataProps = {
   totalProfit: number
   totalTime: number
+  avgPlacement: number
+  numTournaments: number
   freqLocation: string
-  freqBuyin: string
+  freqBuyin: number
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -68,8 +73,20 @@ const Dashboard: React.FC<DashboardProps> = ({
     setPlayerCashData(data)
   }
 
+  const fetchPlayerTournamentData = async () => {
+    const data = await fetchBasePlayerTournamentData(
+      userId,
+      selectedGameType,
+      selectedStake,
+      selectedLocation,
+      selectedTime
+    )
+    setPlayerTournamentData(data)
+  }
+
   useEffect(() => {
     fetchPlayerCashData()
+    fetchPlayerTournamentData()
   }, [
     selectedMode,
     selectedLocation,
@@ -78,19 +95,23 @@ const Dashboard: React.FC<DashboardProps> = ({
     selectedTime,
   ])
 
-  //console.log(playerCashData)
+  console.log(playerTournamentData)
 
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-6xl font-bold">Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-5 gap-2 items-center">
-        <div className="col-span-3 flex flex-col gap-16">
+        <div className="col-span-3 flex flex-col gap-16 overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
             <select
               className="px-3 block w-full py-2 text-[#273B59] text-[14px] font-medium bg-[#F8F9FF] border border-[#A3A3A3] rounded-md shadow-sm focus:outline-none hover:cursor-pointer"
               onChange={(e) => {
                 const value = e.target.value
                 setSelectedMode(value)
+                setSelectedGameType('')
+                setSelectedLocation('')
+                setSelectedStake('')
+                setSelectedTime('')
               }}
               value={selectedMode}
             >
@@ -110,15 +131,15 @@ const Dashboard: React.FC<DashboardProps> = ({
               <option value="All Locations">All Locations</option>
               {selectedMode === 'Cash'
                 ? cashLocations.map((location, index) => (
-                  <option value={location.location} key={index}>
-                    {location.location}
-                  </option>
-                ))
+                    <option value={location.location} key={index}>
+                      {location.location}
+                    </option>
+                  ))
                 : tournamentLocations.map((location, index) => (
-                  <option value={location.location} key={index}>
-                    {location.location}
-                  </option>
-                ))}
+                    <option value={location.location} key={index}>
+                      {location.location}
+                    </option>
+                  ))}
             </select>
             {selectedMode === 'Cash' && (
               <select
@@ -153,15 +174,15 @@ const Dashboard: React.FC<DashboardProps> = ({
               <option value="All Time">All Game Types</option>
               {selectedMode === 'Cash'
                 ? cashGameTypes.map((game_type, index) => (
-                  <option value={game_type.game_type} key={index}>
-                    {game_type.game_type}
-                  </option>
-                ))
+                    <option value={game_type.game_type} key={index}>
+                      {game_type.game_type}
+                    </option>
+                  ))
                 : tournamentGameTypes.map((game_type, index) => (
-                  <option value={game_type.game_type} key={index}>
-                    {game_type.game_type}
-                  </option>
-                ))}
+                    <option value={game_type.game_type} key={index}>
+                      {game_type.game_type}
+                    </option>
+                  ))}
             </select>
             <select
               className="px-3 block w-full py-2 text-[#273B59] text-[14px] font-medium bg-[#F8F9FF] border border-[#A3A3A3] rounded-md shadow-sm focus:outline-none hover:cursor-pointer"
@@ -182,17 +203,25 @@ const Dashboard: React.FC<DashboardProps> = ({
             </select>
           </div>
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col lg:flex-row gap-8">
-              <StatCard
-                net_result={playerCashData?.totalProfit}
-                total_time={playerCashData?.totalTime}
-              />
-              <StatCard2
-                totalSessions={playerCashData?.sessionCount}
-                freqLocation={playerCashData?.freqLocation}
-                freqStake={playerCashData?.freqStake}
-              />
-            </div>
+            <span className="text-sm text-muted-foreground">
+              {playerCashData?.totalTime === 0 &&
+                "Looks like you don't have any time recorded with these settings. Try switching your search."}
+            </span>
+            {selectedMode === 'Cash' ? (
+              <div className="flex flex-col xl:flex-row gap-8">
+                <StatCard
+                  net_result={playerCashData?.totalProfit}
+                  total_time={playerCashData?.totalTime}
+                />
+                <StatCard2
+                  totalSessions={playerCashData?.sessionCount}
+                  freqLocation={playerCashData?.freqLocation}
+                  freqStake={playerCashData?.freqStake}
+                />
+              </div>
+            ) : (
+              <div className="flex flex-col xl:flex-row gap-8">hi</div>
+            )}
           </div>
         </div>
       </div>

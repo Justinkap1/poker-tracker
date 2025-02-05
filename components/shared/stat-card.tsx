@@ -29,11 +29,11 @@ const StatCard: React.FC<StatCardProps> = ({ net_result, total_time }) => {
   const resultPerHour =
     net_result !== undefined && total_time !== undefined && total_time > 0
       ? (Math.round((net_result / total_time) * 100) / 100).toFixed(2)
-      : 'N/A'
+      : 'No Stats Available'
 
   return (
     <div
-      className={`flex flex-col gap-4 min-w-[320px] max-w-[320px] rounded-lg drop-shadow-lg p-4 bg-[#92D8EF]`}
+      className={`flex flex-col gap-4 min-w-[320px] rounded-lg drop-shadow-lg p-4 bg-[#92D8EF]`}
     >
       <div
         className={`${smooch.className} flex flex-row justify-between items-start gap-2`}
@@ -63,8 +63,12 @@ const StatCard: React.FC<StatCardProps> = ({ net_result, total_time }) => {
       <div className="flex flex-col">
         <span className="text-3xl font-bold">Net Result</span>
         <span className="text-xl">
-          {Number(resultPerHour) > 0 ? '+' : '-'}
-          {resultPerHour} per hour
+          {Number(resultPerHour) > 0
+            ? '+'
+            : resultPerHour === 'No Stats Available'}
+          {resultPerHour !== 'No Stats Available'
+            ? `${resultPerHour} per hour`
+            : resultPerHour}
         </span>
       </div>
     </div>
