@@ -33,7 +33,7 @@ const StatCard: React.FC<StatCardProps> = ({ net_result, total_time }) => {
 
   return (
     <div
-      className={`flex flex-col gap-4 w-[320px] h-[210px] rounded-lg drop-shadow-lg p-4 bg-[#92D8EF]`}
+      className={`flex flex-col gap-4 min-w-[320px] max-w-[320px] rounded-lg drop-shadow-lg p-4 bg-[#92D8EF]`}
     >
       <div
         className={`${smooch.className} flex flex-row justify-between items-start gap-2`}
